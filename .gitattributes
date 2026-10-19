@@ -1,0 +1,8 @@
+# Left out of the source archive GitHub serves for `github:` installs. npm
+# applies package.json "files"; bun downloads the archive whole, and without
+# these lines that meant 90 MB of demo tiles in every app's node_modules.
+demo/ export-ignore
+docs/ export-ignore
+test/ export-ignore
+scripts/ export-ignore
+.github/ export-ignore

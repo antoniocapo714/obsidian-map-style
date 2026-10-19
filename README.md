@@ -10,11 +10,11 @@
 </p>
 
 <p align="center">
-  <b>Version 0.2</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 5</a>
+  <b>Version 0.3</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 5</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.2.0-2D72D2?labelColor=1A1D21" alt="Version 0.2.0">
+  <img src="https://img.shields.io/badge/version-0.3.0-2D72D2?labelColor=1A1D21" alt="Version 0.3.0">
   <img src="https://img.shields.io/badge/license-MIT-238551?labelColor=1A1D21" alt="MIT licence">
   <img src="https://img.shields.io/badge/maplibre-5-8A8F98?labelColor=1A1D21" alt="MapLibre 5">
   <img src="https://img.shields.io/badge/no_API_key-self--hosted-6FA6E8?labelColor=1A1D21" alt="No API key, self-hosted">
@@ -44,9 +44,9 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/cr
 
 **What makes it different:**
 
-- **The data leads.** Roads, buildings and labels are grey, and every overlay colour carries chroma. Up to city zoom no road is brighter than the first data colour, and every data mark sits on a dark halo, so where a route crosses an avenue the route wins. Protomaps' coloured POI icons appear only at street zoom (15 and up).
-- **Ink that follows zoom.** Roads stay quiet up to city zoom (13), where you look at data, and step up to street zoom (15), where you read streets.
-- **Large areas are quiet, edges are not.** Airports, industrial land, water and buildings get a subtle fill and an outline that carries the contrast, so a dense city block never outshines its streets.
+- **The data leads.** Roads, buildings and labels are grey, and every overlay colour carries chroma. The map's greys are as neutral as the theme's, so no road or river shares a hue with the data. Every data mark sits on a dark halo, so where a route crosses an avenue there is an edge between them and the route wins. POI icons are greyscale and appear only at street zoom (15 and up).
+- **Readable at every zoom, brighter where you read streets.** Each road class holds a floor at every zoom (motorways 5.1:1, avenues 4.2:1, streets 3.3:1) and rises from city zoom (13) to street zoom (15), where motorways reach 7.4:1.
+- **Large areas are quiet, edges are not.** Airports, industrial land and water get a subtle fill and an outline that carries the contrast. Buildings all but merge with the land up to city zoom, where you look at data, and are drawn by their footprint edge from zoom 14, where you read streets.
 - **Labels in every script.** Labels use Inter, the theme's typeface. Inter is composited with Noto Sans into one font stack, so "Łódź", "Nam Định", Cyrillic, Thai and the rest render in full instead of losing letters.
 - **No black edges.** An optional planet overview sits under your tiles, so an extract of one city or country fades into the world instead of ending in a straight black line.
 - **Self-hosted.** It needs no API key and makes no request to a third-party map provider.
@@ -124,9 +124,9 @@ map.on('load', () => {
 ```
 
 - **Colours.** `OVERLAY` holds the Obsidian theme's categorical chart colours: blue, orange, purple, green, pink, cyan, red and teal. Use them in that order. Neighbours stay distinguishable for colour-blind readers, and every one reaches 3:1 on the land.
-- **Every mark has a halo** of the land colour: a 2 px ring on points, 1.5 px either side of lines and area edges. It is what keeps a line readable where it crosses a bright road.
-- **Points** are 10 px from city zoom.
-- **Lines** are 3 px from city zoom, at full opacity. Opacity is part of the colour, so a half-transparent line is a dimmer line. `lineLayers` returns the halo and the line; add both, in order.
+- **Every mark has a halo** of the land colour: a 2 px ring on points, 1.5–2 px either side of lines and area edges. It is what keeps a line readable where it crosses a bright road.
+- **Points** are 10 px at city zoom and 14 px at street zoom.
+- **Lines** grow with zoom like the roads they cross: 3 px at zoom 13, 4.5 px at 15, 7 px at 18, at full opacity. Opacity is part of the colour, so a half-transparent line is a dimmer line. `lineLayers` returns the halo and the line; add both, in order.
 - **Areas** are a fill plus an edge. `size: 'region'` gives a 12% wash and `'parcel'` gives 32%: the bigger the area, the quieter its fill, and the edge carries the contrast either way.
 
 ## Tiles
@@ -151,8 +151,10 @@ CJK labels are drawn by the browser from local fonts, as MapLibre does by defaul
 
 ## Accessibility
 
-- Every road class you navigate by reaches 3.4–4.0:1 on the land up to city zoom and 4.3–7.4:1 at street zoom.
-- Up to city zoom, no road is brighter than the first overlay colour.
+- Every road class you navigate by holds its floor on the land at every zoom: 2.9:1 for service roads, 3.3:1 for streets, 4.2:1 for avenues, 5.1:1 for motorways. Motorways reach 7.4:1 at street zoom.
+- Building footprints are drawn by a 4.0:1 edge from zoom 14.
+- Every label reaches 4.5:1 against its halo.
+- The basemap's greys carry no more colour than the theme's (OKLCH chroma ≤ 0.012), so hue alone marks what is data.
 - Large areas carry their contrast on an edge of at least 3:1.
 - Overlay colours reach 3:1 on the land, and their order keeps neighbours apart for protanopic and deuteranopic readers.
 - `test/style.test.ts` measures all of it, including that the label glyphs contain every letter of "Łódź", "Nam Định" and "Калининград".
@@ -178,4 +180,4 @@ The demo opens on `?city=madrid|milan|mexico-city`, and the view is kept in the 
 - Code: [MIT](LICENSE).
 - Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), [ODbL](https://opendatacommons.org/licenses/odbl/). Tiles and base style by [Protomaps](https://protomaps.com) (BSD-3-Clause).
 - Inter and Noto Sans: SIL Open Font License 1.1 (`assets/fonts/`).
-- Sprites: Protomaps basemaps-assets, derived from MIT-licensed tangrams/icons (`assets/sprites/`).
+- Sprites: Protomaps basemaps-assets, derived from MIT-licensed tangrams/icons, turned to greyscale (`assets/sprites/`).

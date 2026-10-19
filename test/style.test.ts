@@ -4,9 +4,9 @@ import {EDGED_FILLS, INK_RAMP, LAND, OVERLAY, RING, ZOOM_INK, areaLayers, lineLa
 
 /**
  * The style's contract, measured rather than eyeballed:
- *  - every road class a reader navigates by is visible on the land at every
- *    zoom (≥ 3:1), stays grey, and up to city zoom is no brighter than the
- *    first overlay colour — the data leads by brightness as well as colour;
+ *  - every road class a reader navigates by holds its floor on the land at
+ *    every zoom (2.9–5.1:1), rises toward street zoom, and stays grey;
+ *  - buildings are visible (≥ 2.9:1) and never outshine the minor roads;
  *  - data lines and area edges sit on a halo of the land colour;
  *  - no line or fill ships with opacity below 1 — the rendered colour is the
  *    measured colour;
@@ -28,6 +28,17 @@ const contrast = (a: string, b: string) => {
   const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 };
+/** OKLCH chroma: how much colour a colour carries, on a perceptual scale. */
+const chroma = (h: string) => {
+  const [r, g, b] = hex(h).map((c) => {
+    const v = c / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return Math.hypot(1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s);
+};
 const saturation = (h: string) => {
   const [r, g, b] = hex(h).map((c) => c / 255);
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -35,30 +46,91 @@ const saturation = (h: string) => {
 };
 
 describe('roads and buildings', () => {
+  // The floor each class holds at every zoom: a service road only has to be
+  // findable, a motorway has to be followable.
+  const FLOORS: [string, number][] = [['roads_other', 2.9], ['roads_minor', 3.3], ['roads_major', 4.2], ['roads_highway', 5.1]];
+  for (const [key, floor] of FLOORS) {
+    it(`${key} holds ${floor}:1 at every zoom`, () => {
+      for (const c of ZOOM_INK[key]) expect(contrast(c, LAND)).toBeGreaterThanOrEqual(floor);
+    });
+  }
+  it('the classes stay apart, so a motorway never reads as a residential street', () => {
+    const steps = FLOORS.map(([key]) => lum(ZOOM_INK[key][0]));
+    for (let i = 1; i < steps.length; i++) expect(steps[i]).toBeGreaterThan(steps[i - 1]);
+  });
+  it('the highway reaches ordinary dark-map contrast at street zoom', () => {
+    const [survey, street] = ZOOM_INK.roads_highway;
+    expect(contrast(street, LAND)).toBeGreaterThan(7);
+    expect(contrast(street, LAND)).toBeGreaterThan(contrast(survey, LAND) * 1.3);
+  });
   const navigation = ['roads_minor', 'roads_major', 'roads_highway', 'roads_rail'];
   for (const key of navigation) {
     const [survey, street] = ZOOM_INK[key];
     it(`${key} is visible at street zoom`, () => expect(contrast(street, LAND)).toBeGreaterThanOrEqual(3));
     it(`${key} steps down at survey zoom`, () => expect(contrast(survey, LAND)).toBeLessThan(contrast(street, LAND)));
     it(`${key} is near-neutral, leaving colour to the data`, () => expect(saturation(street)).toBeLessThan(0.28));
-    it(`${key} is legible up to city zoom`, () => expect(contrast(survey, LAND)).toBeGreaterThanOrEqual(3));
-    it(`${key} is no brighter than the first overlay colour up to city zoom`, () => expect(lum(survey)).toBeLessThanOrEqual(lum(OVERLAY.blue)));
   }
   it('the ink starts rising at city zoom, not before', () => {
     expect(INK_RAMP[0]).toBeGreaterThanOrEqual(13);
     const major = style.layers.find((l) => l.id === 'roads_major') as unknown as {paint: Record<string, unknown[]>};
     expect(major.paint['line-color'].slice(0, 4)).toEqual(['interpolate', ['linear'], ['zoom'], INK_RAMP[0]]);
   });
-  it('buildings are a subtle area: the block never outshines the streets', () => {
-    expect(contrast(ZOOM_INK.buildings[1], LAND)).toBeLessThan(1.6);
-    expect(contrast(ZOOM_INK.buildings[1], LAND)).toBeLessThan(contrast(ZOOM_INK.roads_minor[1], LAND));
+  it('buildings are quiet up to city zoom and drawn by their edge at street zoom', () => {
+    const [survey, street] = ZOOM_INK.buildings;
+    // Up to city zoom the block must not compete with the data on it.
+    expect(contrast(survey, LAND)).toBeLessThan(1.3);
+    // Toward street zoom the fill rises but stays an area, under every road…
+    expect(contrast(street, LAND)).toBeGreaterThan(contrast(survey, LAND));
+    expect(contrast(street, LAND)).toBeLessThan(contrast(ZOOM_INK.roads_minor[1], LAND));
+    // …and the footprint's edge is what makes each building visible.
+    expect(contrast(EDGED_FILLS.buildings, LAND)).toBeGreaterThanOrEqual(3);
+    const edge = style.layers.find((l) => l.id === 'buildings_edge')!;
+    expect(edge.minzoom).toBeGreaterThan(INK_RAMP[0]);
   });
   it('large areas carry their contrast on the edge', () => {
     for (const [id, edge] of Object.entries(EDGED_FILLS)) expect(contrast(edge, LAND), id).toBeGreaterThanOrEqual(3);
   });
 });
 
+describe('labels', () => {
+  // A halo colour may be rgba(); its alpha only makes it darker on this map.
+  const hexOf = (v: string) => {
+    const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(v);
+    return m ? '#' + m.slice(1, 4).map((n) => (+n).toString(16).padStart(2, '0')).join('') : v;
+  };
+  const colours = (v: unknown): string[] =>
+    typeof v === 'string' ? (/^(#[0-9A-Fa-f]{6}|rgba?\()/.test(v) ? [hexOf(v)] : []) : Array.isArray(v) ? v.flatMap(colours) : [];
+  const labels = style.layers.filter((l) => l.type === 'symbol' && (l as {paint?: Record<string, unknown>}).paint?.['text-color']);
+  it('exist', () => expect(labels.length).toBeGreaterThan(10));
+  for (const l of labels) {
+    it(`${l.id} reaches 4.5:1 against its halo`, () => {
+      const paint = (l as {paint: Record<string, unknown>}).paint;
+      for (const text of colours(paint['text-color'])) {
+        for (const halo of colours(paint['text-halo-color'])) expect(contrast(text, halo), `${text} on ${halo}`).toBeGreaterThanOrEqual(4.5);
+      }
+    });
+  }
+});
+
 describe('colour is reserved for data', () => {
+  // The roads used to carry twice the theme's grey chroma at the hue of the
+  // blue and purple overlays (260° against 256° and 287°), and water sat at
+  // the cyan's hue: the basemap was spending exactly the colours of the data.
+  it('roads, buildings and edges are as neutral as the theme\'s greys', () => {
+    for (const [key, inks] of Object.entries(ZOOM_INK)) {
+      if (key.startsWith('water')) continue;
+      for (const c of inks) expect(chroma(c), `${key} ${c}`).toBeLessThanOrEqual(0.013);
+    }
+    for (const [key, c] of Object.entries(EDGED_FILLS)) expect(chroma(c), key).toBeLessThanOrEqual(key === 'water' ? 0.021 : 0.013);
+  });
+  it('water keeps only a hint of colour', () => {
+    for (const [key, inks] of Object.entries(ZOOM_INK)) {
+      if (key.startsWith('water')) for (const c of inks) expect(chroma(c), `${key} ${c}`).toBeLessThanOrEqual(0.021);
+    }
+  });
+  it('every overlay carries at least five times the basemap\'s colour', () => {
+    for (const [name, c] of Object.entries(OVERLAY)) expect(chroma(c), name).toBeGreaterThanOrEqual(0.1);
+  });
   it('the basemap shows no coloured POI icons below street zoom', () => {
     const pois = style.layers.find((l) => l.id === 'pois') as {layout: Record<string, unknown>};
     const icon = pois.layout['icon-image'] as unknown[];

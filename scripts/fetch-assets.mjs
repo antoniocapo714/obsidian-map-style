@@ -41,4 +41,4 @@ for (const face of FACES) {
 for (const f of ['dark.json', 'dark.png', 'dark@2x.json', 'dark@2x.png']) {
   await grab(`${BASE}/sprites/v4/${f}`, `assets/sprites/${f}`)
 }
-console.log('sprites: dark, 1x and 2x')
+console.log('sprites: dark, 1x and 2x — now run python3 scripts/grey-sprites.py')

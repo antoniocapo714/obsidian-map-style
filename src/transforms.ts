@@ -141,26 +141,33 @@ export function withZoomAwareInk(layers: Layers, {hideRailways = false} = {}): L
 }
 
 /**
- * Wider, darker halos so a label reads over data as well as over the map;
- * place names step up to near-primary text, and POI labels lose the saturated
- * colours Protomaps gives them — that colour belongs to the data.
+ * Wider, darker halos so a label reads over data as well as over the map, and
+ * an ink per kind of label from LABEL_INK — every one 4.5:1 or more against
+ * the halo. Place names step up to near-primary text; POI labels lose the
+ * saturated colours Protomaps gives them, because that colour belongs to the
+ * data.
  */
 export function withReadableLabels(layers: Layers): Layers {
   return layers.map((l) => {
     if (l.type !== 'symbol') return l;
     const paint = {...(l.paint ?? {})} as Paint;
     if (!('text-halo-color' in paint) && !('text-color' in paint)) return l;
+    const sourceLayer = (l as {'source-layer'?: string})['source-layer'];
     paint['text-halo-width'] = 1.8;
     paint['text-halo-blur'] = 0.4;
-    const sourceLayer = (l as {'source-layer'?: string})['source-layer'];
-    if (sourceLayer === 'places') {
-      paint['text-color'] = LABEL_INK.place;
-      paint['text-halo-color'] = LABEL_INK.placeHalo;
-    }
-    if (sourceLayer === 'pois') {
-      paint['text-color'] = LABEL_INK.poi;
-      paint['text-halo-color'] = LABEL_INK.poiHalo;
-    }
+    paint['text-halo-color'] = LABEL_INK.halo;
+    paint['text-color'] =
+      sourceLayer === 'places'
+        ? LABEL_INK.place
+        : sourceLayer === 'pois'
+          ? LABEL_INK.poi
+          : sourceLayer === 'water'
+            ? LABEL_INK.water
+            : sourceLayer === 'roads'
+              ? l.id === 'roads_labels_minor'
+                ? LABEL_INK.road
+                : LABEL_INK.roadMajor
+              : LABEL_INK.other;
     return {...l, paint} as Layer;
   });
 }

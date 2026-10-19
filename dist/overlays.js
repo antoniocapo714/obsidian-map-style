@@ -26,11 +26,15 @@ export const OVERLAY_ORDER = Object.values(OVERLAY);
 /** The halo around every mark: the land colour, so data cuts through the map and dots stay legible where they overlap. */
 export const RING = '#0F1113';
 const src = ({ source, sourceLayer }) => ({ source, ...(sourceLayer ? { 'source-layer': sourceLayer } : {}) });
-/** Line widths for data: 1.5px at country zoom to 3px at city zoom and closer. */
-const LINE_WIDTH = ['interpolate', ['linear'], ['zoom'], 6, 1.5, 13, 3];
-/** The halo under a line: 1.5px of land colour each side. */
-const HALO_WIDTH = ['interpolate', ['linear'], ['zoom'], 6, 4.5, 13, 6];
-/** Points: 10px from city zoom, ringed in the land colour. */
+/**
+ * Line widths for data. They grow with zoom the way the roads do: Protomaps'
+ * avenues widen to 8–10px at street zoom, and a line that stayed at 3px lost
+ * every crossing to the road it crossed.
+ */
+const LINE_WIDTH = ['interpolate', ['linear'], ['zoom'], 6, 1.5, 13, 3, 15, 4.5, 18, 7];
+/** The halo under a line: 1.5–2px of land colour each side. */
+const HALO_WIDTH = ['interpolate', ['linear'], ['zoom'], 6, 4.5, 13, 7, 15, 8.5, 18, 11];
+/** Points: 10px at city zoom, 14px at street zoom, ringed in the land colour. */
 export function pointLayer(base) {
     return {
         id: base.id,
@@ -39,15 +43,16 @@ export function pointLayer(base) {
         ...(base.filter ? { filter: base.filter } : {}),
         paint: {
             'circle-color': base.color,
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 13, 5],
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 13, 5, 16, 7],
             'circle-stroke-color': RING,
-            'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 13, 2],
+            'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 13, 2, 16, 2.5],
         },
     };
 }
 /**
- * Lines: a halo in the land colour, then the line, 3px from city zoom at full
- * opacity — opacity is part of the colour. Add both, in order.
+ * Lines: a halo in the land colour, then the line — 3px at city zoom, growing
+ * with the roads to 7px at zoom 18 — at full opacity, because opacity is part
+ * of the colour. Add both, in order.
  */
 export function lineLayers(base) {
     const shared = { ...src(base), ...(base.filter ? { filter: base.filter } : {}), layout: { 'line-cap': 'round', 'line-join': 'round' } };

@@ -10,7 +10,7 @@ This is the **Obsidian map style**: a dark MapLibre GL basemap on Protomaps v4 t
 - `src/overlays.ts` — colours and layer recipes for data on top.
 - `dist/` — **generated** by `bun run build`. Never edit by hand; commit it with the source change (the package installs from GitHub).
 - `assets/fonts/` — **generated** "Obsidian Sans" glyphs (`bun run glyphs`). Never edit by hand.
-- `assets/sprites/` — Protomaps' sprite sheet, fetched by `scripts/fetch-assets.mjs`.
+- `assets/sprites/` — Protomaps' sprite sheet, fetched by `scripts/fetch-assets.mjs` and turned to greyscale by `scripts/grey-sprites.py`. Run both, in that order; a coloured sprite puts colour on the basemap that is not data.
 - `demo/` — the demo; `demo/public/tiles/` holds the city extracts and the world overview.
 - `test/style.test.ts` — the style's contract.
 - `.tools/` — downloaded build tools (pmtiles CLI, Python env). Gitignored.

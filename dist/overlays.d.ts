@@ -32,13 +32,14 @@ type Base = {
     sourceLayer?: string;
     filter?: FilterSpecification;
 };
-/** Points: 10px from city zoom, ringed in the land colour. */
+/** Points: 10px at city zoom, 14px at street zoom, ringed in the land colour. */
 export declare function pointLayer(base: Base & {
     color: string;
 }): LayerSpecification;
 /**
- * Lines: a halo in the land colour, then the line, 3px from city zoom at full
- * opacity — opacity is part of the colour. Add both, in order.
+ * Lines: a halo in the land colour, then the line — 3px at city zoom, growing
+ * with the roads to 7px at zoom 18 — at full opacity, because opacity is part
+ * of the colour. Add both, in order.
  */
 export declare function lineLayers(base: Base & {
     color: string;

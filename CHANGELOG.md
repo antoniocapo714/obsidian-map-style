@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+The basemap is readable first and spends no colour. 0.2.0 dimmed the roads below the first data colour, which took motorways to 4.0:1. The roads keep their floors now, and the data is separated from them by hue, halo and size instead.
+
+- Each road class holds a floor on the land at every zoom: service roads 2.9:1, streets 3.3:1, avenues 4.2:1, motorways 5.1:1. Motorways reach 7.4:1 at street zoom.
+- The basemap is as neutral as the theme's greys (OKLCH chroma 0.012 or less). Roads used to carry twice that, at the hue of the blue and purple overlays, and water sat at the cyan's hue. Water keeps a hint of colour (0.02).
+- POI icons are greyscale (`scripts/grey-sprites.py`), at the same brightness. They were the only colour on the map that was not data.
+- Every label reaches 4.5:1 against its halo, and every halo is dark. Street names were dark grey on a black halo across a light road (2.4:1), and water names were the water's colour on the water (1.1:1).
+- Buildings all but merge with the land up to city zoom (1.2:1), rise to 1.7:1 toward street zoom, and are drawn by a 4.0:1 footprint edge from zoom 14.
+- Data lines grow with zoom like the roads they cross: 3 px at zoom 13, 4.5 px at 15, 7 px at 18, on a 1.5–2 px halo. Points go from 10 px at city zoom to 14 px at street zoom.
+- Kept from 0.2.0: the halo under every data mark, and road ink rising between zoom 13 and 15 (`INK_RAMP`).
+- Installing from GitHub with bun no longer downloads the demo's tiles: `demo/`, `docs/`, `test/` and `scripts/` are left out of the source archive.
+
 ## 0.2.0
 
 The data now leads the map by brightness as well as colour. At city zoom the avenues were brighter than the blue drawn on top of them, so thin marks were lost among the streets.

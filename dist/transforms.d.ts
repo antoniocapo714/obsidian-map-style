@@ -41,9 +41,11 @@ export declare function withZoomAwareInk(layers: Layers, { hideRailways }?: {
     hideRailways?: boolean | undefined;
 }): Layers;
 /**
- * Wider, darker halos so a label reads over data as well as over the map;
- * place names step up to near-primary text, and POI labels lose the saturated
- * colours Protomaps gives them — that colour belongs to the data.
+ * Wider, darker halos so a label reads over data as well as over the map, and
+ * an ink per kind of label from LABEL_INK — every one 4.5:1 or more against
+ * the halo. Place names step up to near-primary text; POI labels lose the
+ * saturated colours Protomaps gives them, because that colour belongs to the
+ * data.
  */
 export declare function withReadableLabels(layers: Layers): Layers;
 /** The zoom from which POI icons appear. */
