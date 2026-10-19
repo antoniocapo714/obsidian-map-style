@@ -326,7 +326,7 @@ function ReadmeBanner() {
         <Heading level={1} type="display-1">
           Obsidian
           <br />
-          map style
+          map
         </Heading>
         <Text type="large" weight="normal" color="secondary">
           A dark MapLibre basemap that stays quiet, so the colour on the map is your data.

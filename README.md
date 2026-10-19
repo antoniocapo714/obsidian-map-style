@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.jpg" alt="Obsidian map style: central Milan in the style, with a district, a route and points drawn on top as the only colour on the map" width="100%">
+  <img src="docs/banner.jpg" alt="Obsidian map: central Milan in the style, with a district, a route and points drawn on top as the only colour on the map" width="100%">
 </p>
 
 <h1 align="center">Obsidian map style</h1>
