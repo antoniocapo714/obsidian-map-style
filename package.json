@@ -1,0 +1,28 @@
+{
+  "name": "obsidian-map-style",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@astryxdesign/core": "0.7.1",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@stylexjs/stylex": "^0.19.0",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "astryx-theme-obsidian": "github:antoniocapo714/astryx-theme-obsidian",
+    "fontnik": "^0.7.7",
+    "lightningcss": "^1.33.0",
+    "maplibre-gl": "^5.24.0",
+    "pmtiles": "^4.4.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.1",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "@protomaps/basemaps": "^5.7.2"
+  }
+}

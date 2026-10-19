@@ -1,0 +1,116 @@
+@import 'astryx-theme-obsidian/themes/obsidian.fonts.css';
+@import 'astryx-theme-obsidian/themes/obsidian.css';
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--color-background-body);
+}
+
+.demo {
+  position: relative;
+  height: 100%;
+}
+.demo-map {
+  position: absolute;
+  inset: 0;
+}
+
+/* The panel: the theme's floating veil over the map. */
+.demo-panel {
+  position: absolute;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
+  width: 320px;
+  max-height: calc(100% - 2 * var(--spacing-3));
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-5);
+  padding: var(--spacing-5);
+  border-radius: var(--radius-page);
+  background: rgba(24, 27, 32, 0.88);
+  backdrop-filter: blur(20px) saturate(120%);
+}
+.demo-panel-head,
+.demo-group {
+  display: grid;
+  gap: var(--spacing-2);
+}
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+.demo-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+.demo-key {
+  flex-shrink: 0;
+  display: inline-block;
+}
+.demo-key-point {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+.demo-key-line {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.demo-key-area {
+  width: 12px;
+  height: 10px;
+  border: 2px solid;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+.demo-link {
+  color: var(--color-text-accent);
+}
+
+/* MapLibre's chrome in the theme's type and colours. */
+.maplibregl-map {
+  font-family: var(--font-family-body);
+}
+.maplibregl-ctrl-group {
+  background: var(--color-background-popover);
+  box-shadow: none;
+}
+.maplibregl-ctrl-group button + button {
+  border-top-color: var(--color-border-emphasized);
+}
+.maplibregl-ctrl-icon {
+  filter: invert(0.9);
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(8, 9, 10, 0.75) !important;
+  color: var(--color-text-secondary);
+}
+.maplibregl-ctrl-attrib a {
+  color: var(--color-text-secondary);
+}
+.maplibregl-ctrl-attrib-button {
+  filter: invert(0.9);
+}
+
+@media (max-width: 640px) {
+  .demo-panel {
+    top: auto;
+    bottom: var(--spacing-2);
+    left: var(--spacing-2);
+    right: var(--spacing-2);
+    width: auto;
+    max-height: 46%;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+}
