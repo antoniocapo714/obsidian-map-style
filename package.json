@@ -14,13 +14,13 @@
     "dark",
     "map-style"
   ],
-  "homepage": "https://github.com/Creative-Context/obsidian-map-style#readme",
+  "homepage": "https://github.com/creative-context/obsidian-map-style#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Creative-Context/obsidian-map-style.git"
+    "url": "git+https://github.com/creative-context/obsidian-map-style.git"
   },
   "bugs": {
-    "url": "https://github.com/Creative-Context/obsidian-map-style/issues"
+    "url": "https://github.com/creative-context/obsidian-map-style/issues"
   },
   "files": [
     "dist",

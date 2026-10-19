@@ -25,7 +25,7 @@ import {OVERLAY, areaLayers, firstLabelLayer, lineLayer, obsidianMapStyle, point
 maplibregl.addProtocol('pmtiles', new Protocol().tile);
 
 const BASE = import.meta.env.BASE_URL;
-const REPO = 'https://github.com/Creative-Context/obsidian-map-style';
+const REPO = 'https://github.com/creative-context/obsidian-map-style';
 
 const CITIES = {
   madrid: {label: 'Madrid', center: [-3.7038, 40.4168] as [number, number]},

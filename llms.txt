@@ -4,7 +4,7 @@
 
 ## Install and use
 
-- `npm install github:Creative-Context/obsidian-map-style maplibre-gl pmtiles`
+- `npm install github:creative-context/obsidian-map-style maplibre-gl pmtiles`
 - Register PMTiles once: `maplibregl.addProtocol('pmtiles', new Protocol().tile)` (from `pmtiles`).
 - Serve the package's `assets/` folder (glyphs and sprites) from your app.
 - `new maplibregl.Map({style: obsidianMapStyle({tiles: 'https://host/area.pmtiles', worldTiles: 'https://host/world.pmtiles', assets: '/basemap'}), ...})`
@@ -23,5 +23,5 @@
 
 ## Links
 
-- README: https://github.com/Creative-Context/obsidian-map-style#readme
-- Theme companion: https://github.com/Creative-Context/astryx-theme-obsidian
+- README: https://github.com/creative-context/obsidian-map-style#readme
+- Theme companion: https://github.com/creative-context/astryx-theme-obsidian
