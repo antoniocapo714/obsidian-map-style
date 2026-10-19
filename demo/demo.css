@@ -11,6 +11,24 @@ body {
   background: var(--color-background-body);
 }
 
+/*
+ * The panel's material: dark glass. The map shows through it, darkened and
+ * softened, so the panel reads as a layer over the map rather than a slab
+ * cut out of it.
+ *
+ * Set by contrast, not taste. The worst case is the brightest pixel the veil
+ * can sit on: measured as a full-viewport veil over Madrid, Milan and Mexico
+ * City at region, city and street zoom, with the sample data on. At these
+ * values secondary text (#8A8F98) never falls below 4.65:1. The first version,
+ * 0.88 over a 20px blur, measured 4.89:1 but blurred a city into flat grey —
+ * the glass was invisible. A darker tint is what buys the lighter alpha.
+ * Change one value, re-measure all three.
+ */
+:root {
+  --veil-bg: rgba(14, 16, 19, 0.8);
+  --veil-blur: blur(6px) saturate(120%);
+}
+
 .demo {
   position: relative;
   height: 100%;
@@ -20,7 +38,7 @@ body {
   inset: 0;
 }
 
-/* The panel: the theme's floating veil over the map. */
+/* The panel floats over the map in the veil. */
 .demo-panel {
   position: absolute;
   top: var(--spacing-3);
@@ -34,8 +52,8 @@ body {
   gap: var(--spacing-5);
   padding: var(--spacing-5);
   border-radius: var(--radius-page);
-  background: rgba(24, 27, 32, 0.88);
-  backdrop-filter: blur(20px) saturate(120%);
+  background: var(--veil-bg);
+  backdrop-filter: var(--veil-blur);
 }
 .demo-panel-head,
 .demo-group {
@@ -126,7 +144,7 @@ body {
   inset: 0;
 }
 .banner-copy {
-  /* The demo's panel: the theme's floating veil over the map. */
+  /* The demo's panel, in the same veil. */
   position: absolute;
   left: var(--spacing-4);
   top: var(--spacing-4);
@@ -138,8 +156,8 @@ body {
   gap: var(--spacing-5);
   padding: var(--spacing-8);
   border-radius: var(--radius-page);
-  background: rgba(24, 27, 32, 0.88);
-  backdrop-filter: blur(20px) saturate(120%);
+  background: var(--veil-bg);
+  backdrop-filter: var(--veil-blur);
 }
 .banner-copy .astryx-text {
   text-wrap: balance;

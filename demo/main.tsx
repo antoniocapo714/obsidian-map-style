@@ -267,14 +267,15 @@ const BANNER_VIEW: Record<City, {center: [number, number]; zoom: number}> = {
 /**
  * Banner data, laid out in screen pixels and projected onto whatever the map
  * shows, so the composition holds whichever city is behind it: an area in the
- * upper right, a route sweeping across, points along it — all inside the frame
- * and clear of the band.
+ * upper right, a route sweeping across, points along it. The route and two
+ * points start under the panel, clear of its text, so the glass has something
+ * to show through it.
  */
 function bannerData(m: maplibregl.Map) {
   const at = ([x, y]: [number, number]) => m.unproject([x * K, y * K]).toArray();
   const area: [number, number][] = [[905, 70], [1120, 48], [1196, 214], [1062, 286], [930, 232], [905, 70]];
-  const route: [number, number][] = [[560, 612], [640, 520], [742, 468], [858, 452], [962, 392], [1074, 360], [1180, 404], [1300, 382]];
-  const points: [number, number][] = [[642, 520], [858, 452], [1074, 360], [1180, 404], [690, 214], [780, 330], [1000, 150], [1092, 236], [1180, 560], [930, 560], [600, 300]];
+  const route: [number, number][] = [[-20, 548], [150, 588], [320, 590], [480, 556], [640, 520], [742, 468], [858, 452], [962, 392], [1074, 360], [1180, 404], [1300, 382]];
+  const points: [number, number][] = [[150, 588], [440, 64], [642, 520], [858, 452], [1074, 360], [1180, 404], [690, 214], [780, 330], [1000, 150], [1092, 236], [1180, 560], [930, 560], [600, 300]];
   const fc = (features: unknown[]) => ({type: 'geojson', data: {type: 'FeatureCollection', features}}) as GeoJSONSourceSpecification;
   const f = (geometry: unknown) => ({type: 'Feature', properties: {}, geometry});
   return {
