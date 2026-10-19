@@ -1,5 +1,5 @@
 import type {StyleSpecification} from 'maplibre-gl';
-import {EDGED_FILLS, LABEL_INK, LAND, ZOOM_INK} from './palette';
+import {EDGED_FILLS, LABEL_INK, LAND, ZOOM_INK} from './palette.js';
 
 type Layers = StyleSpecification['layers'];
 type Layer = Layers[number];
@@ -62,10 +62,13 @@ export function withFillEdges(layers: Layers): Layers {
       source: (l as {source: string}).source,
       'source-layer': (l as {'source-layer'?: string})['source-layer'],
       filter: (l as {filter?: unknown}).filter,
-      minzoom: 9,
+      minzoom: l.id === 'buildings' ? 14 : 9,
       paint: {
         'line-color': edge,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 9, 0.6, 14, 1.4],
+        // Footprints are small and many: a hairline, not a stroke.
+        'line-width': l.id === 'buildings'
+          ? ['interpolate', ['linear'], ['zoom'], 14, 0.4, 17, 1]
+          : ['interpolate', ['linear'], ['zoom'], 9, 0.6, 14, 1.4],
       },
     } as Layer);
   }

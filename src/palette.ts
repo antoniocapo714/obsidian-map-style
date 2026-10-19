@@ -74,7 +74,7 @@ export const FLAVOR: Partial<Flavor> = {
   roads_label_minor_halo: '#08090A',
   roads_label_major: '#62666D',
   roads_label_major_halo: '#08090A',
-  buildings: '#5A606B',
+  buildings: '#1C1F24',
   pier: '#34383D',
   city_label: '#8A8F98',
   city_label_halo: '#08090A',
@@ -93,9 +93,12 @@ export const FLAVOR: Partial<Flavor> = {
  * Ink that rises with zoom: [survey colour at z8, street colour at z13].
  *
  * At survey zoom the basemap shares the screen with large data overlays and
- * should stay low; at street zoom those overlays are usually gone or thin, and
- * the roads are what a reader navigates by. Measured against the land, roads
- * run about 1.3–2.6:1 at survey zoom and 2–5:1 at street zoom.
+ * stays a step lower; at street zoom those overlays are usually gone or thin,
+ * and the roads are what a reader navigates by. Measured against the land,
+ * the navigable classes run 3.0–5.2:1 at survey zoom and 4.3–7.4:1 at street
+ * zoom — ordinary dark-map contrast. What keeps them behind the data is that
+ * they are grey: every one stays under 0.28 saturation, every overlay above
+ * 0.42.
  *
  * Keys are layer-id prefixes, matched longest first (`water` is a prefix of
  * `water_stream`).
@@ -109,7 +112,10 @@ export const ZOOM_INK: Record<string, [string, string]> = {
   roads_rail: ['#7C8490', '#8E97A4'],
   roads_runway: ['#666C77', '#7C8390'],
   roads_taxiway: ['#666C77', '#7C8390'],
-  buildings: ['#5A606B', '#707885'],
+  // Buildings are an area, and in a dense centre they ARE the city block: a
+  // bright fill turns the street map into a grey slab with black streets.
+  // Subtle fill here; the footprint's edge carries the contrast (EDGED_FILLS).
+  buildings: ['#1C1F24', '#24282E'],
   water: ['#506773', '#627E8C'],
   water_stream: ['#5A6E7C', '#6D8394'],
   water_river: ['#5A6E7C', '#6D8394'],
@@ -127,6 +133,7 @@ export const ZOOM_INK: Record<string, [string, string]> = {
 export const EDGED_FILLS: Record<string, string> = {
   landuse_aerodrome: '#5F646E',
   landuse_industrial: '#6F675F',
+  buildings: '#5F656F',
   // The coastline: the sea has no fill, so this line is what shows where the
   // land stops.
   water: '#56636C',

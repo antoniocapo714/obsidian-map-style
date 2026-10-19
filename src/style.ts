@@ -1,7 +1,7 @@
 import {layers, namedFlavor, type Flavor} from '@protomaps/basemaps';
 import type {StyleSpecification} from 'maplibre-gl';
-import {FLAVOR} from './palette';
-import {foldOpacity, withFillEdges, withReadableLabels, withVisibleBorders, withZoomAwareInk} from './transforms';
+import {FLAVOR} from './palette.js';
+import {foldOpacity, withFillEdges, withReadableLabels, withVisibleBorders, withZoomAwareInk} from './transforms.js';
 
 export type ObsidianMapStyleOptions = {
   /**
