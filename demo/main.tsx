@@ -245,9 +245,9 @@ function Demo() {
 
 
 /**
- * The README banner, as a poster: the map full-bleed and untouched, the data on
- * it in colour, and the name on a dark band that fades into the map from the
- * left. No cards — the map is the subject.
+ * The README banner: the map full-bleed with its data in colour, and the name
+ * on the same floating panel the demo puts over the map — the banner shows the
+ * product as it is used, not a poster about it.
  *
  * Drawn at the size GitHub shows it — an 880×440 frame, captured at 3× — so
  * every word renders at its real type size. Drawn at 1280 and scaled down to
@@ -298,7 +298,7 @@ function ReadmeBanner() {
       interactive: false,
       attributionControl: false,
     });
-    // The band covers the left 40%; centre the city in what is left.
+    // The panel covers the left 40%; centre the city in what is left.
     m.setPadding({left: 520 * K, top: 0, right: 0, bottom: 0});
     m.jumpTo({center: view.center, zoom: view.zoom});
     m.on('styleimagemissing', (e) => {
@@ -319,7 +319,6 @@ function ReadmeBanner() {
   return (
     <div className="banner-frame" style={FRAME}>
       <div ref={container} className="banner-map" />
-      <div className="banner-band" />
       <div className="banner-copy">
         <Heading level={1} type="display-1">
           Obsidian

@@ -125,29 +125,24 @@ body {
   position: absolute;
   inset: 0;
 }
-/* A straight fade from the body colour, not a vignette: the copy sits on solid
-   ground and the map arrives untouched on the right. */
-.banner-band {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    var(--color-background-body) 0%,
-    var(--color-background-body) 36%,
-    rgba(8, 9, 10, 0.86) 46%,
-    rgba(8, 9, 10, 0) 64%
-  );
-}
 .banner-copy {
+  /* The demo's panel: the theme's floating veil over the map. */
   position: absolute;
-  left: var(--spacing-10);
-  top: 0;
-  bottom: 0;
-  width: 300px;
+  left: var(--spacing-4);
+  top: var(--spacing-4);
+  bottom: var(--spacing-4);
+  width: 340px;
+  box-sizing: border-box;
   display: grid;
   align-content: center;
   gap: var(--spacing-5);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-page);
+  background: rgba(24, 27, 32, 0.88);
+  backdrop-filter: blur(20px) saturate(120%);
+}
+.banner-copy .astryx-text {
+  text-wrap: balance;
 }
 .banner-legend {
   display: flex;
