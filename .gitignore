@@ -1,0 +1,10 @@
+node_modules/
+dist/
+demo/dist/
+# Downloaded build tools (pmtiles CLI). Fetched by scripts, never committed.
+.tools/
+# Source archives the demo extract is cut from: tens of GB, never committed.
+source-tiles/
+test-results/
+playwright-report/
+*.tgz
