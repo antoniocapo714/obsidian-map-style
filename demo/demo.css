@@ -12,21 +12,18 @@ body {
 }
 
 /*
- * The panel's material: dark glass. The map shows through it, darkened and
- * softened, so the panel reads as a layer over the map rather than a slab
- * cut out of it.
+ * The material every floating surface over the map wears: a dark glass veil.
+ * Large shapes behind it — water, a district, a route — show through as soft
+ * light; streets blur away, so text sits on an even ground.
  *
- * Set by contrast, not taste. The worst case is the brightest pixel the veil
- * can sit on: measured as a full-viewport veil over Madrid, Milan and Mexico
- * City at region, city and street zoom, with the sample data on. At these
- * values secondary text (#8A8F98) never falls below 4.65:1. The first version,
- * 0.88 over a 20px blur, measured 4.89:1 but blurred a city into flat grey —
- * the glass was invisible. A darker tint is what buys the lighter alpha.
- * Change one value, re-measure all three.
+ * Set by contrast, not taste: over the brightest pixel of Madrid, Milan and
+ * Mexico City at region, city and street zoom, with the sample data on,
+ * secondary text (#8A8F98) stays at 4.89:1. A clearer glass that shows the
+ * streets was tried and measured: 0.8 over a 6px blur fell to 3.9:1.
  */
 :root {
-  --veil-bg: rgba(14, 16, 19, 0.8);
-  --veil-blur: blur(6px) saturate(120%);
+  --veil-bg: rgba(24, 27, 32, 0.88);
+  --veil-blur: blur(20px) saturate(120%);
 }
 
 .demo {
@@ -49,16 +46,27 @@ body {
   box-sizing: border-box;
   display: grid;
   align-content: start;
-  gap: var(--spacing-5);
-  padding: var(--spacing-5);
-  border-radius: var(--radius-page);
+  gap: var(--spacing-4);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-container);
   background: var(--veil-bg);
   backdrop-filter: var(--veil-blur);
 }
-.demo-panel-head,
+.demo-panel-head {
+  display: grid;
+}
 .demo-group {
   display: grid;
   gap: var(--spacing-2);
+}
+/* Wells hold input, lifts hold actions: on the veil a field is a dark recess
+   with no border, and buttons keep their lift. */
+.demo-panel .astryx-selector {
+  background-color: var(--color-background-body);
+  border-color: transparent;
+}
+.demo-panel .astryx-selector:hover {
+  background-color: var(--color-background-surface);
 }
 .demo-row {
   display: flex;
@@ -99,22 +107,43 @@ body {
 .maplibregl-map {
   font-family: var(--font-family-body);
 }
-.maplibregl-ctrl-group {
-  background: var(--color-background-popover);
+/* The zoom buttons: one pill in the veil, segments divided by a hairline,
+   filled only on hover. No shadow: depth is light. */
+.maplibregl-ctrl-group:not(:empty) {
+  overflow: hidden;
+  border-radius: var(--radius-element);
+  background: var(--veil-bg);
+  backdrop-filter: var(--veil-blur);
   box-shadow: none;
 }
+.maplibregl-ctrl-group button {
+  width: 32px;
+  height: 32px;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
 .maplibregl-ctrl-group button + button {
-  border-top-color: var(--color-border-emphasized);
+  border-top: 1px solid var(--color-border);
+}
+.maplibregl-ctrl-group button:not(:disabled):hover {
+  background-color: var(--color-overlay-hover);
 }
 .maplibregl-ctrl-icon {
-  filter: invert(0.9);
+  filter: invert(0.6);
 }
+/* The attribution is a licence condition, so it stays readable: secondary
+   ink on the veil, not a bright pill. */
 .maplibregl-ctrl-attrib {
-  background: rgba(8, 9, 10, 0.75) !important;
+  border-radius: var(--radius-inner);
+  background: var(--veil-bg) !important;
+  backdrop-filter: var(--veil-blur);
   color: var(--color-text-secondary);
+  font-size: 11px;
 }
 .maplibregl-ctrl-attrib a {
   color: var(--color-text-secondary);
+}
+.maplibregl-ctrl-attrib a:hover {
+  color: var(--color-text-primary);
 }
 .maplibregl-ctrl-attrib-button {
   filter: invert(0.9);
@@ -128,8 +157,6 @@ body {
     right: var(--spacing-2);
     width: auto;
     max-height: 46%;
-    gap: var(--spacing-4);
-    padding: var(--spacing-4);
   }
 }
 
@@ -155,7 +182,7 @@ body {
   align-content: center;
   gap: var(--spacing-5);
   padding: var(--spacing-8);
-  border-radius: var(--radius-page);
+  border-radius: var(--radius-container);
   background: var(--veil-bg);
   backdrop-filter: var(--veil-blur);
 }
@@ -180,7 +207,8 @@ body {
   bottom: 0;
   padding: var(--spacing-1) var(--spacing-3);
   border-top-left-radius: var(--radius-inner);
-  background: rgba(8, 9, 10, 0.85);
+  background: var(--veil-bg);
+  backdrop-filter: var(--veil-blur);
   color: var(--color-text-secondary);
   font: var(--font-weight-normal) var(--font-size-sm) var(--font-family-body);
 }

@@ -177,8 +177,10 @@ function Demo() {
       <div ref={container} className="demo-map" />
       <aside className="demo-panel" aria-label="Map style controls">
         <div className="demo-panel-head">
-          <Heading level={1}>Obsidian map style</Heading>
-          <Text color="secondary">
+          <Heading level={3} accessibilityLevel={1}>
+            Obsidian map style
+          </Heading>
+          <Text type="supporting">
             A dark MapLibre basemap on Protomaps tiles. It stays near-neutral so the data on top
             can carry colour.
           </Text>
@@ -268,8 +270,8 @@ const BANNER_VIEW: Record<City, {center: [number, number]; zoom: number}> = {
  * Banner data, laid out in screen pixels and projected onto whatever the map
  * shows, so the composition holds whichever city is behind it: an area in the
  * upper right, a route sweeping across, points along it. The route and two
- * points start under the panel, clear of its text, so the glass has something
- * to show through it.
+ * points run on under the panel, clear of its text, as data does under the
+ * panel in the demo.
  */
 function bannerData(m: maplibregl.Map) {
   const at = ([x, y]: [number, number]) => m.unproject([x * K, y * K]).toArray();
