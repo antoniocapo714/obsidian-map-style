@@ -50,6 +50,14 @@ describe('roads and buildings', () => {
   });
 });
 
+describe('colour is reserved for data', () => {
+  it('the basemap shows no coloured POI icons below street zoom', () => {
+    const pois = style.layers.find((l) => l.id === 'pois') as {layout: Record<string, unknown>};
+    const icon = pois.layout['icon-image'] as unknown[];
+    expect(icon.slice(0, 4)).toEqual(['step', ['zoom'], '', 15]);
+  });
+});
+
 describe('opacity is part of the colour', () => {
   it('no line or fill ships below full opacity, except the sample-free ones Protomaps leaves alone', () => {
     const partial = style.layers.filter((l) => {

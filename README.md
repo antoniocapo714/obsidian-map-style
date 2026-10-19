@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.jpg" alt="Obsidian map style: Madrid in the style, with cards for data on top, overlay colours, every script, zoom-aware ink and self-hosting" width="100%">
+  <img src="docs/banner.jpg" alt="Obsidian map style: central Milan in the style, with a district, a route and points drawn on top as the only colour on the map" width="100%">
 </p>
 
 <h1 align="center">Obsidian map style</h1>
@@ -37,7 +37,7 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/an
 
 **What makes it different:**
 
-- **Colour is reserved for data.** Roads, buildings and labels are grey, and every overlay colour carries chroma. The data is separated from the map by colour, not brightness, so the map can keep ordinary dark-map contrast and still recede.
+- **Colour is reserved for data.** Roads, buildings and labels are grey, and every overlay colour carries chroma. Protomaps' coloured POI icons appear only at street zoom (15 and up). The data is separated from the map by colour, not brightness, so the map can keep ordinary dark-map contrast and still recede.
 - **Ink that follows zoom.** Roads step up from region zoom to street zoom, so the map is quiet when your data covers a region and legible when you are reading a street.
 - **Large areas are quiet, edges are not.** Airports, industrial land, water and buildings get a subtle fill and an outline that carries the contrast, so a dense city block never outshines its streets.
 - **Labels in every script.** Labels use Inter, the theme's typeface. Inter is composited with Noto Sans into one font stack, so "Łódź", "Nam Định", Cyrillic, Thai and the rest render in full instead of losing letters.

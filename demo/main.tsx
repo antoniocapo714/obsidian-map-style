@@ -13,11 +13,9 @@ import {Text} from '@astryxdesign/core/Text';
 import {Button} from '@astryxdesign/core/Button';
 import {Selector} from '@astryxdesign/core/Selector';
 import {Switch} from '@astryxdesign/core/Switch';
-import {Card} from '@astryxdesign/core/Card';
-import {Badge} from '@astryxdesign/core/Badge';
 import {obsidianTheme} from 'astryx-theme-obsidian/themes/obsidian';
 
-import {OVERLAY, OVERLAY_ORDER, areaLayers, firstLabelLayer, lineLayer, obsidianMapStyle, pointLayer} from '../src';
+import {OVERLAY, areaLayers, firstLabelLayer, lineLayer, obsidianMapStyle, pointLayer} from '../src';
 
 /**
  * The map style on three city extracts, with a planet overview underneath and
@@ -247,115 +245,100 @@ function Demo() {
 
 
 /**
- * The README banner: the map itself as the canvas, the name in the theme's
- * display type, and cards for what the style does. Rendered at `?view=banner`
- * into a fixed 1280×640 frame, captured at 2× and saved as docs/banner.jpg.
+ * The README banner, as a poster: the map full-bleed and untouched, the data on
+ * it in colour, and the name on a dark band that fades into the map from the
+ * left. No cards — the map is the subject. Rendered at `?view=banner` (add
+ * `&city=milan` to try another extract) into a fixed 1280×640 frame, captured
+ * at 2× and saved as docs/banner.jpg.
  */
+const BANNER_VIEW: Record<City, {center: [number, number]; zoom: number}> = {
+  madrid: {center: [-3.6905, 40.4225], zoom: 13.2},
+  milan: {center: [9.1905, 45.4655], zoom: 13.4},
+  'mexico-city': {center: [-99.1332, 19.4326], zoom: 12.9},
+};
+
+/**
+ * Banner data, laid out in screen pixels and projected onto whatever the map
+ * shows, so the composition holds whichever city is behind it: an area in the
+ * upper right, a route sweeping across, points along it — all inside the frame
+ * and clear of the band.
+ */
+function bannerData(m: maplibregl.Map) {
+  const at = ([x, y]: [number, number]) => m.unproject([x, y]).toArray();
+  const area: [number, number][] = [[905, 70], [1120, 48], [1196, 214], [1062, 286], [930, 232], [905, 70]];
+  const route: [number, number][] = [[560, 612], [640, 520], [742, 468], [858, 452], [962, 392], [1074, 360], [1180, 404], [1300, 382]];
+  const points: [number, number][] = [[642, 520], [858, 452], [1074, 360], [1180, 404], [690, 214], [780, 330], [1000, 150], [1092, 236], [1180, 560], [930, 560], [600, 300]];
+  const fc = (features: unknown[]) => ({type: 'geojson', data: {type: 'FeatureCollection', features}}) as GeoJSONSourceSpecification;
+  const f = (geometry: unknown) => ({type: 'Feature', properties: {}, geometry});
+  return {
+    area: fc([f({type: 'Polygon', coordinates: [area.map(at)]})]),
+    route: fc([f({type: 'LineString', coordinates: route.map(at)})]),
+    points: fc(points.map((p) => f({type: 'Point', coordinates: at(p)}))),
+  };
+}
+
+const bannerCity: City = new URLSearchParams(location.search).get('city') ? startCity : 'milan';
+
 function ReadmeBanner() {
   const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    const view = BANNER_VIEW[bannerCity];
     const m = new maplibregl.Map({
       container: container.current!,
-      style: styleFor('madrid'),
-      center: [-3.6935, 40.4245],
-      zoom: 12.9,
+      style: styleFor(bannerCity),
+      center: view.center,
+      zoom: view.zoom,
       interactive: false,
       attributionControl: false,
     });
+    // The band covers the left 40%; centre the city in what is left.
+    m.setPadding({left: 520, top: 0, right: 0, bottom: 0});
+    m.jumpTo({center: view.center, zoom: view.zoom});
     m.on('styleimagemissing', (e) => {
       if (!m.hasImage(e.id)) m.addImage(e.id, {width: 1, height: 1, data: new Uint8Array(4)});
     });
-    m.once('style.load', () => addOverlays(m, 'madrid', {points: true, route: true, district: true}));
+    m.once('style.load', () => {
+      const data = bannerData(m);
+      const before = firstLabelLayer(m.getStyle());
+      m.addSource('banner-area', data.area);
+      m.addSource('banner-route', data.route);
+      m.addSource('banner-points', data.points);
+      for (const layer of areaLayers({id: 'banner-area', source: 'banner-area', color: OVERLAY.purple, size: 'region'})) m.addLayer(layer, before);
+      m.addLayer(lineLayer({id: 'banner-route', source: 'banner-route', color: OVERLAY.orange}), before);
+      m.addLayer(pointLayer({id: 'banner-points', source: 'banner-points', color: OVERLAY.blue}), before);
+    });
     return () => m.remove();
   }, []);
-  const noop = () => {};
   return (
     <div className="banner-frame">
       <div ref={container} className="banner-map" />
-      <div className="banner-shade" />
-
-      <div className="banner-card" style={{left: 40, top: 32, width: 236}}>
-        <Card padding={4}>
-          <div className="banner-stack">
-            <Text type="label">Data on top</Text>
-            <div className="demo-toggle">
-              <span className="demo-key demo-key-point" style={{background: OVERLAY.blue}} />
-              <Switch label="Points" value onChange={noop} />
-            </div>
-            <div className="demo-toggle">
-              <span className="demo-key demo-key-line" style={{background: OVERLAY.orange}} />
-              <Switch label="Route" value onChange={noop} />
-            </div>
-            <div className="demo-toggle">
-              <span className="demo-key demo-key-area" style={{borderColor: OVERLAY.purple, background: `${OVERLAY.purple}52`}} />
-              <Switch label="District" value onChange={noop} />
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="banner-card banner-code" style={{left: 470, top: 40, width: 340}}>
-        <Card padding={4}>
-          <pre>
-            <Text type="code">{"obsidianMapStyle({\n  tiles: 'madrid.pmtiles',\n  assets: '/basemap',\n})"}</Text>
-          </pre>
-        </Card>
-      </div>
-
-      <div className="banner-card" style={{left: 1000, top: 56, width: 248}}>
-        <Card padding={4}>
-          <div className="banner-stack">
-            <Text type="label">Overlay colours</Text>
-            <div className="banner-chips">
-              {OVERLAY_ORDER.map((c) => (
-                <span key={c} style={{background: c}} />
-              ))}
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="banner-title">
+      <div className="banner-band" />
+      <div className="banner-copy">
         <Heading level={1} type="display-1">
-          Obsidian map style
+          Obsidian
+          <br />
+          map style
         </Heading>
-        <Text color="secondary">A dark MapLibre basemap, built to sit behind data</Text>
+        <Text color="secondary">
+          A dark MapLibre basemap that stays quiet,
+          <br />
+          so the colour on the map is your data.
+        </Text>
+        <ul className="banner-legend">
+          <li>
+            <span className="demo-key demo-key-point" style={{background: OVERLAY.blue}} />
+            <Text type="supporting">Points</Text>
+          </li>
+          <li>
+            <span className="demo-key demo-key-line" style={{background: OVERLAY.orange}} />
+            <Text type="supporting">Routes</Text>
+          </li>
+          <li>
+            <span className="demo-key demo-key-area" style={{borderColor: OVERLAY.purple, background: `${OVERLAY.purple}52`}} />
+            <Text type="supporting">Areas</Text>
+          </li>
+        </ul>
       </div>
-
-      <div className="banner-card" style={{left: 40, top: 470, width: 372}}>
-        <Card padding={4}>
-          <div className="banner-stack">
-            <Text type="label">Every script</Text>
-            <Text>Łódź · Nam Định · Калининград · Αθήνα</Text>
-          </div>
-        </Card>
-      </div>
-
-      <div className="banner-card" style={{left: 470, top: 476, width: 340}}>
-        <Card padding={4}>
-          <div className="banner-stack">
-            <Text type="label">Ink that follows zoom</Text>
-            <div className="demo-row">
-              <Button size="sm" label="Region · 9" />
-              <Button size="sm" label="City · 13" variant="primary" />
-              <Button size="sm" label="Street · 15.5" />
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="banner-card" style={{left: 1010, top: 470, width: 230}}>
-        <Card padding={4}>
-          <div className="banner-stack">
-            <Text type="label">Self-hosted</Text>
-            <div className="demo-row">
-              <Badge label="No API key" variant="success" />
-              <Badge label="PMTiles" />
-            </div>
-          </div>
-        </Card>
-      </div>
-
       <div className="banner-attribution">© OpenStreetMap contributors · Protomaps</div>
     </div>
   );

@@ -1,7 +1,7 @@
 import {layers, namedFlavor, type Flavor} from '@protomaps/basemaps';
 import type {StyleSpecification} from 'maplibre-gl';
 import {FLAVOR} from './palette.js';
-import {foldOpacity, withFillEdges, withReadableLabels, withVisibleBorders, withZoomAwareInk} from './transforms.js';
+import {foldOpacity, withFillEdges, withQuietIcons, withReadableLabels, withVisibleBorders, withZoomAwareInk} from './transforms.js';
 
 export type ObsidianMapStyleOptions = {
   /**
@@ -41,7 +41,9 @@ function absolute(url: string): string {
 function obsidianLayers(source: string, lang: string, hideRailways: boolean): Layers {
   const flavor = {...namedFlavor('dark'), ...FLAVOR} as Flavor;
   return withFillEdges(
-    withVisibleBorders(foldOpacity(withZoomAwareInk(withReadableLabels(layers(source, flavor, {lang})), {hideRailways}))),
+    withVisibleBorders(
+      foldOpacity(withZoomAwareInk(withQuietIcons(withReadableLabels(layers(source, flavor, {lang}))), {hideRailways})),
+    ),
   );
 }
 

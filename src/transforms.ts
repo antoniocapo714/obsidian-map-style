@@ -151,3 +151,22 @@ export function withReadableLabels(layers: Layers): Layers {
     return {...l, paint} as Layer;
   });
 }
+
+/** The zoom from which POI icons appear. */
+export const ICONS_FROM = 15;
+
+/**
+ * POI icons only at street zoom. Protomaps' sprite is coloured — pink stars,
+ * green parks, blue stations — and at city zoom those icons were the only
+ * colour on the basemap, competing with the data the style exists to carry.
+ * The labels stay: they orient. Below ICONS_FROM the icon is simply empty.
+ */
+export function withQuietIcons(layers: Layers): Layers {
+  return layers.map((l) => {
+    if (l.id !== 'pois' || l.type !== 'symbol') return l;
+    const layout = {...(l.layout ?? {})} as Record<string, unknown>;
+    if (!('icon-image' in layout)) return l;
+    layout['icon-image'] = ['step', ['zoom'], '', ICONS_FROM, layout['icon-image']];
+    return {...l, layout} as Layer;
+  });
+}
