@@ -21,15 +21,15 @@
 </p>
 
 <p align="center">
-  <a href="https://antoniocapo714.github.io/obsidian-map-style/"><img src="https://img.shields.io/badge/Demo-live-2D72D2?labelColor=1A1D21" alt="Live demo"></a>
+  <a href="https://creative-context.github.io/obsidian-map-style/"><img src="https://img.shields.io/badge/Demo-live-2D72D2?labelColor=1A1D21" alt="Live demo"></a>
 </p>
 
 <p align="center">
-  <a href="https://antoniocapo714.github.io/obsidian-map-style/"><b>Live demo</b></a> ·
+  <a href="https://creative-context.github.io/obsidian-map-style/"><b>Live demo</b></a> ·
   <a href="#getting-started"><b>Getting started</b></a> ·
   <a href="#data-on-top"><b>Data on top</b></a> ·
   <a href="#tiles"><b>Tiles</b></a> ·
-  <a href="https://github.com/antoniocapo714/astryx-theme-obsidian"><b>Obsidian theme</b></a> ·
+  <a href="https://github.com/Creative-Context/astryx-theme-obsidian"><b>Obsidian theme</b></a> ·
   <a href="#ai-assistants"><b>AI assistants</b></a> ·
   <a href="CHANGELOG.md"><b>Changelog</b></a>
 </p>
@@ -38,9 +38,9 @@
 
 A map in a data product has one job: give the data a place to stand. This style keeps the basemap near-neutral and readable, so whatever you draw on top — points, routes, regions, heatmaps — is the most colourful thing on screen.
 
-The [live demo](https://antoniocapo714.github.io/obsidian-map-style/) shows it on Madrid, Milan and Mexico City, with sample data on top.
+The [live demo](https://creative-context.github.io/obsidian-map-style/) shows it on Madrid, Milan and Mexico City, with sample data on top.
 
-It is the map companion to the [Obsidian theme for Astryx](https://github.com/antoniocapo714/astryx-theme-obsidian), and uses the same colours, type and rules, but it works in any MapLibre app.
+It is the map companion to the [Obsidian theme for Astryx](https://github.com/Creative-Context/astryx-theme-obsidian), and uses the same colours, type and rules, but it works in any MapLibre app.
 
 **What makes it different:**
 
@@ -58,7 +58,7 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/an
 ## Getting started
 
 ```bash
-npm install github:antoniocapo714/obsidian-map-style maplibre-gl pmtiles
+npm install github:Creative-Context/obsidian-map-style maplibre-gl pmtiles
 ```
 
 Serve the package's `assets/` folder (label glyphs and sprites) from your app, for example by copying `node_modules/obsidian-map-style/assets` into your public directory. Then:
