@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/hero.jpg" alt="Madrid at city zoom in the Obsidian map style, with sample points, a route and a district drawn on top" width="100%">
+  <img src="docs/banner.jpg" alt="Obsidian map style: Madrid in the style, with cards for data on top, overlay colours, every script, zoom-aware ink and self-hosting" width="100%">
 </p>
 
 <h1 align="center">Obsidian map style</h1>
@@ -42,6 +42,8 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/an
 - **Labels in every script.** Labels use Inter, the theme's typeface. Inter is composited with Noto Sans into one font stack, so "Łódź", "Nam Định", Cyrillic, Thai and the rest render in full instead of losing letters.
 - **No black edges.** An optional planet overview sits under your tiles, so an extract of one city or country fades into the world instead of ending in a straight black line.
 - **Self-hosted.** It needs no API key and makes no request to a third-party map provider.
+
+![Madrid at city zoom, with sample points, a route and a district drawn on top](docs/hero.jpg)
 
 ![Central Milan at street zoom: subtle building footprints, legible streets](docs/street.jpg)
 
