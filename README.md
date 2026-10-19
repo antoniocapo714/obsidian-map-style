@@ -21,6 +21,11 @@
 </p>
 
 <p align="center">
+  <a href="https://antoniocapo714.github.io/obsidian-map-style/"><img src="https://img.shields.io/badge/Demo-live-2D72D2?labelColor=1A1D21" alt="Live demo"></a>
+</p>
+
+<p align="center">
+  <a href="https://antoniocapo714.github.io/obsidian-map-style/"><b>Live demo</b></a> ·
   <a href="#getting-started"><b>Getting started</b></a> ·
   <a href="#data-on-top"><b>Data on top</b></a> ·
   <a href="#tiles"><b>Tiles</b></a> ·
@@ -32,6 +37,8 @@
 ## Overview
 
 A map in a data product has one job: give the data a place to stand. This style keeps the basemap near-neutral and readable, so whatever you draw on top — points, routes, regions, heatmaps — is the most colourful thing on screen.
+
+The [live demo](https://antoniocapo714.github.io/obsidian-map-style/) shows it on Madrid, Milan and Mexico City, with sample data on top.
 
 It is the map companion to the [Obsidian theme for Astryx](https://github.com/antoniocapo714/astryx-theme-obsidian), and uses the same colours, type and rules, but it works in any MapLibre app.
 
