@@ -1,0 +1,27 @@
+# Obsidian map style — a dark MapLibre basemap for data
+
+> A dark basemap style for MapLibre GL on Protomaps v4 tiles (OpenStreetMap data). It keeps the basemap near-neutral and readable so data drawn on top carries the colour. Self-hosted: no API key, no third-party map provider at runtime.
+
+## Install and use
+
+- `npm install github:antoniocapo714/obsidian-map-style maplibre-gl pmtiles`
+- Register PMTiles once: `maplibregl.addProtocol('pmtiles', new Protocol().tile)` (from `pmtiles`).
+- Serve the package's `assets/` folder (glyphs and sprites) from your app.
+- `new maplibregl.Map({style: obsidianMapStyle({tiles: 'https://host/area.pmtiles', worldTiles: 'https://host/world.pmtiles', assets: '/basemap'}), ...})`
+- `tiles`: a PMTiles archive or TileJSON in the Protomaps v4 schema. `worldTiles` (optional): a planet overview to zoom 6 drawn underneath so an extract never ends in a black edge. `assets`: where `assets/` is served. Also `lang` (default `en`) and `hideRailways`.
+
+## Drawing data on top
+
+- Insert your layers before `firstLabelLayer(map.getStyle())` so place names stay on top.
+- Use `pointLayer`, `lineLayer` and `areaLayers` with colours from `OVERLAY`, in this order: blue, orange, purple, green, pink, cyan, red, teal. Neighbours stay distinguishable for colour-blind readers; every colour reaches 3:1 on the land.
+- Areas: `size: 'region'` (12% fill) for large areas, `'parcel'` (32%) for small ones; the edge carries the contrast. Do not use grey for data — grey is the basemap's.
+- Keep the OpenStreetMap attribution visible.
+
+## Tiles
+
+- Protomaps publishes daily planet builds; cut an area with `pmtiles extract <planet> out.pmtiles --bbox=… --maxzoom=14` (a city is 15–20 MB). Host on anything that answers HTTP range requests.
+
+## Links
+
+- README: https://github.com/antoniocapo714/obsidian-map-style#readme
+- Theme companion: https://github.com/antoniocapo714/astryx-theme-obsidian

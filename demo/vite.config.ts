@@ -24,6 +24,8 @@ function basemapAssets(): Plugin {
     },
     closeBundle() {
       cpSync(assets, resolve(root, 'dist/basemap'), { recursive: true })
+      // Publish the repository's llms.txt with the demo, from the one source.
+      cpSync(resolve(root, '../llms.txt'), resolve(root, 'dist/llms.txt'))
     },
   }
 }
