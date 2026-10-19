@@ -59,7 +59,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.0.3",
-    "astryx-theme-obsidian": "github:Creative-Context/astryx-theme-obsidian",
+    "astryx-theme-obsidian": "github:creative-context/astryx-theme-obsidian",
     "fontnik": "^0.7.7",
     "lightningcss": "^1.33.0",
     "maplibre-gl": "^5.24.0",

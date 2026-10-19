@@ -15,7 +15,7 @@
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
         "@vitejs/plugin-react": "^6.0.3",
-        "astryx-theme-obsidian": "github:Creative-Context/astryx-theme-obsidian",
+        "astryx-theme-obsidian": "github:creative-context/astryx-theme-obsidian",
         "fontnik": "^0.7.7",
         "lightningcss": "^1.33.0",
         "maplibre-gl": "^5.24.0",
@@ -140,7 +140,7 @@
 
     "assertion-error": ["assertion-error@2.0.1", "", {}, "sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA=="],
 
-    "astryx-theme-obsidian": ["astryx-theme-obsidian@github:Creative-Context/astryx-theme-obsidian#0c66d2e", { "dependencies": { "@fontsource-variable/inter": "^5.3.0", "@fontsource-variable/space-grotesk": "^5.3.0", "@fontsource/space-mono": "^5.3.0" }, "peerDependencies": { "@astryxdesign/cli": ">=0.7.0", "@astryxdesign/core": ">=0.7.1 <0.8.0" }, "optionalPeers": ["@astryxdesign/cli"] }, "Creative-Context-astryx-theme-obsidian-0c66d2e", "sha512-vulhVprUQjHA0LxXo9bBTtYUTd/34XqqhYavTAoL1t+f5pms6+fv0KEEvPPl+OdKGjBOfvbdEBT1P0qZ0V/nxQ=="],
+    "astryx-theme-obsidian": ["astryx-theme-obsidian@github:creative-context/astryx-theme-obsidian#0c66d2e", { "dependencies": { "@fontsource-variable/inter": "^5.3.0", "@fontsource-variable/space-grotesk": "^5.3.0", "@fontsource/space-mono": "^5.3.0" }, "peerDependencies": { "@astryxdesign/cli": ">=0.7.0", "@astryxdesign/core": ">=0.7.1 <0.8.0" }, "optionalPeers": ["@astryxdesign/cli"] }, "creative-context-astryx-theme-obsidian-0c66d2e", "sha512-uTErAc7Z675Vuqj1n3HIEYFL50faBx89XTzguInxkDJ8AjSSULeB7pXMxnIgGsThRXcYO4evSs9s48yjMO1X4w=="],
 
     "balanced-match": ["balanced-match@1.0.2", "", {}, "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="],
 
