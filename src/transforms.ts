@@ -87,6 +87,18 @@ export function withVisibleBorders(layers: Layers): Layers {
 }
 
 /**
+ * The zooms between which the basemap's ink rises from survey to street.
+ *
+ * Up to city zoom the map is the ground under the data: roads stay at survey
+ * ink, darker than the overlay colours they would otherwise outshine. From
+ * there to street zoom the map becomes the thing being read, and the ink rises
+ * with it. The ramp used to run from 8 to 13, so at city zoom — where a
+ * district, a route and its points are usually looked at — every avenue was
+ * already brighter than the blue on top of it.
+ */
+export const INK_RAMP = [13, 15] as const;
+
+/**
  * Applies ZOOM_INK, and keeps the sea unfilled while inland water is lifted.
  *
  * - Casings and labels are left alone: brightening a casing turns it into a
@@ -117,10 +129,11 @@ export function withZoomAwareInk(layers: Layers, {hideRailways = false} = {}): L
     const [a, b] = isTunnel ? [dim(survey), dim(street)] : [survey, street];
     const water = (colour: string) => ['case', ['==', ['get', 'kind'], 'ocean'], LAND, colour];
     const paint = {...(l.paint ?? {})} as Paint;
+    const [from, to] = INK_RAMP;
     paint[prop] =
       l.id === 'water'
-        ? ['interpolate', ['linear'], ['zoom'], 8, water(a), 13, water(b)]
-        : ['interpolate', ['linear'], ['zoom'], 8, a, 13, b];
+        ? ['interpolate', ['linear'], ['zoom'], from, water(a), to, water(b)]
+        : ['interpolate', ['linear'], ['zoom'], from, a, to, b];
     // Colour and alpha together, so the measured value is the rendered one.
     paint[l.type === 'line' ? 'line-opacity' : 'fill-opacity'] = 1;
     return {...l, paint} as Layer;

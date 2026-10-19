@@ -13,7 +13,7 @@
 ## Drawing data on top
 
 - Insert your layers before `firstLabelLayer(map.getStyle())` so place names stay on top.
-- Use `pointLayer`, `lineLayer` and `areaLayers` with colours from `OVERLAY`, in this order: blue, orange, purple, green, pink, cyan, red, teal. Neighbours stay distinguishable for colour-blind readers; every colour reaches 3:1 on the land.
+- Use `pointLayer`, `lineLayers` and `areaLayers` with colours from `OVERLAY`, in this order: blue, orange, purple, green, pink, cyan, red, teal. Neighbours stay distinguishable for colour-blind readers; every colour reaches 3:1 on the land. `lineLayers` and `areaLayers` return several layers (a halo of the land colour comes first); add all of them, in order. `lineLayer` is the line without its halo and is deprecated.
 - Areas: `size: 'region'` (12% fill) for large areas, `'parcel'` (32%) for small ones; the edge carries the contrast. Do not use grey for data — grey is the basemap's.
 - Keep the OpenStreetMap attribution visible.
 

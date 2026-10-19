@@ -10,11 +10,11 @@
 </p>
 
 <p align="center">
-  <b>Version 0.1</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 5</a>
+  <b>Version 0.2</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 5</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0-2D72D2?labelColor=1A1D21" alt="Version 0.1.0">
+  <img src="https://img.shields.io/badge/version-0.2.0-2D72D2?labelColor=1A1D21" alt="Version 0.2.0">
   <img src="https://img.shields.io/badge/license-MIT-238551?labelColor=1A1D21" alt="MIT licence">
   <img src="https://img.shields.io/badge/maplibre-5-8A8F98?labelColor=1A1D21" alt="MapLibre 5">
   <img src="https://img.shields.io/badge/no_API_key-self--hosted-6FA6E8?labelColor=1A1D21" alt="No API key, self-hosted">
@@ -44,8 +44,8 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/cr
 
 **What makes it different:**
 
-- **Colour is reserved for data.** Roads, buildings and labels are grey, and every overlay colour carries chroma. Protomaps' coloured POI icons appear only at street zoom (15 and up). The data is separated from the map by colour, not brightness, so the map can keep ordinary dark-map contrast and still recede.
-- **Ink that follows zoom.** Roads step up from region zoom to street zoom, so the map is quiet when your data covers a region and legible when you are reading a street.
+- **The data leads.** Roads, buildings and labels are grey, and every overlay colour carries chroma. Up to city zoom no road is brighter than the first data colour, and every data mark sits on a dark halo, so where a route crosses an avenue the route wins. Protomaps' coloured POI icons appear only at street zoom (15 and up).
+- **Ink that follows zoom.** Roads stay quiet up to city zoom (13), where you look at data, and step up to street zoom (15), where you read streets.
 - **Large areas are quiet, edges are not.** Airports, industrial land, water and buildings get a subtle fill and an outline that carries the contrast, so a dense city block never outshines its streets.
 - **Labels in every script.** Labels use Inter, the theme's typeface. Inter is composited with Noto Sans into one font stack, so "Łódź", "Nam Định", Cyrillic, Thai and the rest render in full instead of losing letters.
 - **No black edges.** An optional planet overview sits under your tiles, so an extract of one city or country fades into the world instead of ending in a straight black line.
@@ -106,12 +106,17 @@ Two files tell an AI assistant how to work with the style:
 Draw your layers between the basemap and its labels, so place names stay readable:
 
 ```ts
-import {OVERLAY, areaLayers, firstLabelLayer, lineLayer, pointLayer} from 'obsidian-map-style';
+import {OVERLAY, areaLayers, firstLabelLayer, lineLayers, pointLayer} from 'obsidian-map-style';
 
 map.on('load', () => {
   const before = firstLabelLayer(map.getStyle());
   map.addSource('sites', {type: 'geojson', data: sites});
+  map.addSource('route', {type: 'geojson', data: route});
+  map.addSource('zones', {type: 'geojson', data: zones});
   map.addLayer(pointLayer({id: 'sites', source: 'sites', color: OVERLAY.blue}), before);
+  for (const layer of lineLayers({id: 'route', source: 'route', color: OVERLAY.orange})) {
+    map.addLayer(layer, before);
+  }
   for (const layer of areaLayers({id: 'zones', source: 'zones', color: OVERLAY.purple, size: 'region'})) {
     map.addLayer(layer, before);
   }
@@ -119,8 +124,9 @@ map.on('load', () => {
 ```
 
 - **Colours.** `OVERLAY` holds the Obsidian theme's categorical chart colours: blue, orange, purple, green, pink, cyan, red and teal. Use them in that order. Neighbours stay distinguishable for colour-blind readers, and every one reaches 3:1 on the land.
-- **Points** are 8 px at street zoom, ringed in the land colour so overlapping dots stay legible.
-- **Lines** are 2.5 px at full opacity. Opacity is part of the colour, so a half-transparent line is a dimmer line.
+- **Every mark has a halo** of the land colour: a 2 px ring on points, 1.5 px either side of lines and area edges. It is what keeps a line readable where it crosses a bright road.
+- **Points** are 10 px from city zoom.
+- **Lines** are 3 px from city zoom, at full opacity. Opacity is part of the colour, so a half-transparent line is a dimmer line. `lineLayers` returns the halo and the line; add both, in order.
 - **Areas** are a fill plus an edge. `size: 'region'` gives a 12% wash and `'parcel'` gives 32%: the bigger the area, the quieter its fill, and the edge carries the contrast either way.
 
 ## Tiles
@@ -145,7 +151,8 @@ CJK labels are drawn by the browser from local fonts, as MapLibre does by defaul
 
 ## Accessibility
 
-- Every road class you navigate by reaches 4.3–7.4:1 on the land at street zoom.
+- Every road class you navigate by reaches 3.4–4.0:1 on the land up to city zoom and 4.3–7.4:1 at street zoom.
+- Up to city zoom, no road is brighter than the first overlay colour.
 - Large areas carry their contrast on an edge of at least 3:1.
 - Overlay colours reach 3:1 on the land, and their order keeps neighbours apart for protanopic and deuteranopic readers.
 - `test/style.test.ts` measures all of it, including that the label glyphs contain every letter of "Łódź", "Nam Định" and "Калининград".

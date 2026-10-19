@@ -61,9 +61,9 @@ export const FLAVOR: Partial<Flavor> = {
   minor_a: '#616874',
   minor_b: '#616874',
   link: '#616874',
-  major: '#707885',
-  highway: '#7E8796',
-  railway: '#7C8490',
+  major: '#676E7B',
+  highway: '#6C7481',
+  railway: '#6A717C',
   boundaries: '#707885',
 
   // Labels: readable, never bright. Full brightness is left to the data.
@@ -90,15 +90,19 @@ export const FLAVOR: Partial<Flavor> = {
 };
 
 /**
- * Ink that rises with zoom: [survey colour at z8, street colour at z13].
+ * Ink that rises with zoom: [survey colour up to city zoom, street colour at
+ * street zoom] — the zooms are INK_RAMP, 13 and 15.
  *
- * At survey zoom the basemap shares the screen with large data overlays and
- * stays a step lower; at street zoom those overlays are usually gone or thin,
- * and the roads are what a reader navigates by. Measured against the land,
- * the navigable classes run 3.0–5.2:1 at survey zoom and 4.3–7.4:1 at street
- * zoom — ordinary dark-map contrast. What keeps them behind the data is that
- * they are grey: every one stays under 0.28 saturation, every overlay above
- * 0.42.
+ * Up to city zoom the basemap shares the screen with data and stays a step
+ * lower; at street zoom the overlays are usually gone or thin, and the roads
+ * are what a reader navigates by. Measured against the land, the navigable
+ * classes run 3.4–4.0:1 up to city zoom and 4.3–7.4:1 at street zoom.
+ *
+ * Two things keep them behind the data. They are grey: every one stays under
+ * 0.28 saturation, every overlay above 0.42. And up to city zoom none is
+ * brighter than the first overlay colour (blue, luminance 0.176) — minor 0.137,
+ * major 0.155, highway 0.173 — because the eye reads brightness before hue, and
+ * at 5.2:1 the highways were the brightest thing on a map of data.
  *
  * Keys are layer-id prefixes, matched longest first (`water` is a prefix of
  * `water_stream`).
@@ -107,9 +111,9 @@ export const ZOOM_INK: Record<string, [string, string]> = {
   roads_other: ['#5A606B', '#707885'],
   roads_minor: ['#616874', '#78818F'],
   roads_link: ['#616874', '#78818F'],
-  roads_major: ['#707885', '#8892A2'],
-  roads_highway: ['#7E8796', '#98A3B5'],
-  roads_rail: ['#7C8490', '#8E97A4'],
+  roads_major: ['#676E7B', '#8892A2'],
+  roads_highway: ['#6C7481', '#98A3B5'],
+  roads_rail: ['#6A717C', '#8E97A4'],
   roads_runway: ['#666C77', '#7C8390'],
   roads_taxiway: ['#666C77', '#7C8390'],
   // Buildings are an area, and in a dense centre they ARE the city block: a

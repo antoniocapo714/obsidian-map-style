@@ -1,12 +1,13 @@
 import {readFileSync, readdirSync} from 'node:fs';
 import {describe, expect, it} from 'vitest';
-import {EDGED_FILLS, LAND, OVERLAY, ZOOM_INK, obsidianMapStyle} from '../src';
+import {EDGED_FILLS, INK_RAMP, LAND, OVERLAY, RING, ZOOM_INK, areaLayers, lineLayers, obsidianMapStyle} from '../src';
 
 /**
  * The style's contract, measured rather than eyeballed:
- *  - every road class a reader navigates by is visible on the land at street
- *    zoom (≥ 3:1), steps down at survey zoom, and stays grey — the data is
- *    separated from the basemap by colour, not by brightness;
+ *  - every road class a reader navigates by is visible on the land at every
+ *    zoom (≥ 3:1), stays grey, and up to city zoom is no brighter than the
+ *    first overlay colour — the data leads by brightness as well as colour;
+ *  - data lines and area edges sit on a halo of the land colour;
  *  - no line or fill ships with opacity below 1 — the rendered colour is the
  *    measured colour;
  *  - overlay colours reach 3:1 on the land and carry chroma, so data never
@@ -40,7 +41,14 @@ describe('roads and buildings', () => {
     it(`${key} is visible at street zoom`, () => expect(contrast(street, LAND)).toBeGreaterThanOrEqual(3));
     it(`${key} steps down at survey zoom`, () => expect(contrast(survey, LAND)).toBeLessThan(contrast(street, LAND)));
     it(`${key} is near-neutral, leaving colour to the data`, () => expect(saturation(street)).toBeLessThan(0.28));
+    it(`${key} is legible up to city zoom`, () => expect(contrast(survey, LAND)).toBeGreaterThanOrEqual(3));
+    it(`${key} is no brighter than the first overlay colour up to city zoom`, () => expect(lum(survey)).toBeLessThanOrEqual(lum(OVERLAY.blue)));
   }
+  it('the ink starts rising at city zoom, not before', () => {
+    expect(INK_RAMP[0]).toBeGreaterThanOrEqual(13);
+    const major = style.layers.find((l) => l.id === 'roads_major') as unknown as {paint: Record<string, unknown[]>};
+    expect(major.paint['line-color'].slice(0, 4)).toEqual(['interpolate', ['linear'], ['zoom'], INK_RAMP[0]]);
+  });
   it('buildings are a subtle area: the block never outshines the streets', () => {
     expect(contrast(ZOOM_INK.buildings[1], LAND)).toBeLessThan(1.6);
     expect(contrast(ZOOM_INK.buildings[1], LAND)).toBeLessThan(contrast(ZOOM_INK.roads_minor[1], LAND));
@@ -70,6 +78,12 @@ describe('opacity is part of the colour', () => {
 });
 
 describe('overlays', () => {
+  it('lines and area edges sit on a halo of the land colour', () => {
+    const line = lineLayers({id: 'r', source: 'r', color: OVERLAY.orange});
+    expect(line.map((l) => l.id)).toEqual(['r-halo', 'r']);
+    expect((line[0] as {paint: Record<string, unknown>}).paint['line-color']).toBe(RING);
+    expect(areaLayers({id: 'a', source: 'a', color: OVERLAY.purple}).map((l) => l.id)).toEqual(['a-fill', 'a-edge-halo', 'a-edge']);
+  });
   for (const [name, c] of Object.entries(OVERLAY)) {
     it(`${name} reaches 3:1 on the land and reads as a colour`, () => {
       expect(contrast(c, LAND)).toBeGreaterThanOrEqual(3);

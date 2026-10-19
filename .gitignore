@@ -1,5 +1,5 @@
 node_modules/
-dist/
+# dist/ is NOT ignored: the package installs from GitHub, so the build ships in git.
 demo/dist/
 # Downloaded build tools (pmtiles CLI). Fetched by scripts, never committed.
 .tools/

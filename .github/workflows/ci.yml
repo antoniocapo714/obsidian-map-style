@@ -28,6 +28,9 @@ jobs:
       - run: bunx tsc --noEmit
       - run: bun run test
       - run: bun run build
+      # The package installs from GitHub, so dist/ is committed: it must match src/.
+      - name: dist/ is current
+        run: test -z "$(git status --porcelain -- dist)" || (git status -- dist; echo "Run bun run build and commit dist/"; exit 1)
       - run: bunx vite build demo
         env:
           DEMO_BASE: /obsidian-map-style/

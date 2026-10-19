@@ -15,7 +15,7 @@ import {Selector} from '@astryxdesign/core/Selector';
 import {Switch} from '@astryxdesign/core/Switch';
 import {obsidianTheme} from 'astryx-theme-obsidian/themes/obsidian';
 
-import {OVERLAY, areaLayers, firstLabelLayer, lineLayer, obsidianMapStyle, pointLayer} from '../src';
+import {OVERLAY, areaLayers, firstLabelLayer, lineLayers, obsidianMapStyle, pointLayer} from '../src';
 
 /**
  * The map style on three city extracts, with a planet overview underneath and
@@ -78,8 +78,8 @@ function sampleData([lng, lat]: [number, number]) {
 
 const LAYERS = {
   points: ['sample-points'],
-  route: ['sample-route'],
-  district: ['sample-district-fill', 'sample-district-edge'],
+  route: ['sample-route-halo', 'sample-route'],
+  district: ['sample-district-fill', 'sample-district-edge-halo', 'sample-district-edge'],
 };
 type Overlay = keyof typeof LAYERS;
 
@@ -98,7 +98,7 @@ function addOverlays(map: maplibregl.Map, city: City, visible: Record<Overlay, b
   map.addSource('sample-route', data.route);
   map.addSource('sample-district', data.district);
   for (const layer of areaLayers({id: 'sample-district', source: 'sample-district', color: OVERLAY.purple, size: 'region'})) map.addLayer(layer, before);
-  map.addLayer(lineLayer({id: 'sample-route', source: 'sample-route', color: OVERLAY.orange}), before);
+  for (const layer of lineLayers({id: 'sample-route', source: 'sample-route', color: OVERLAY.orange})) map.addLayer(layer, before);
   map.addLayer(pointLayer({id: 'sample-points', source: 'sample-points', color: OVERLAY.blue}), before);
   for (const [key, ids] of Object.entries(LAYERS)) {
     for (const id of ids) map.setLayoutProperty(id, 'visibility', visible[key as Overlay] ? 'visible' : 'none');
@@ -314,7 +314,7 @@ function ReadmeBanner() {
       m.addSource('banner-route', data.route);
       m.addSource('banner-points', data.points);
       for (const layer of areaLayers({id: 'banner-area', source: 'banner-area', color: OVERLAY.purple, size: 'region'})) m.addLayer(layer, before);
-      m.addLayer(lineLayer({id: 'banner-route', source: 'banner-route', color: OVERLAY.orange}), before);
+      for (const layer of lineLayers({id: 'banner-route', source: 'banner-route', color: OVERLAY.orange})) m.addLayer(layer, before);
       m.addLayer(pointLayer({id: 'banner-points', source: 'banner-points', color: OVERLAY.blue}), before);
     });
     return () => m.remove();
