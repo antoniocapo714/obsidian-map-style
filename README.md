@@ -25,6 +25,7 @@
   <a href="#data-on-top"><b>Data on top</b></a> ·
   <a href="#tiles"><b>Tiles</b></a> ·
   <a href="https://github.com/antoniocapo714/astryx-theme-obsidian"><b>Obsidian theme</b></a> ·
+  <a href="#ai-assistants"><b>AI assistants</b></a> ·
   <a href="CHANGELOG.md"><b>Changelog</b></a>
 </p>
 
@@ -133,6 +134,13 @@ CJK labels are drawn by the browser from local fonts, as MapLibre does by defaul
 - Large areas carry their contrast on an edge of at least 3:1.
 - Overlay colours reach 3:1 on the land, and their order keeps neighbours apart for protanopic and deuteranopic readers.
 - `test/style.test.ts` measures all of it, including that the label glyphs contain every letter of "Łódź", "Nam Định" and "Калининград".
+
+## AI assistants
+
+Two files tell an AI assistant how to work with the style:
+
+- **[`llms.txt`](llms.txt)** is for an assistant building a map *with* the style: install, the options, how to draw data on top, the colour order and the attribution it must keep. It ships in the package and with the demo.
+- **[`AGENTS.md`](AGENTS.md)** is for an assistant working *on* this repository: the layout, which files are generated and must not be edited by hand, the commands, and the rules the tests enforce. `CLAUDE.md` imports it.
 
 ## Known issues
 
