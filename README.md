@@ -86,6 +86,14 @@ const map = new maplibregl.Map({
 | `lang` | `en` | Label language. |
 | `hideRailways` | `false` | Hide the basemap's railways, for apps that draw their own. |
 
+### AI assistants
+
+Two files tell an AI assistant how to work with the style:
+
+- **[`llms.txt`](llms.txt)** is for an assistant building a map *with* the style: install, the options, how to draw data on top, the colour order and the attribution it must keep. It ships in the package and with the demo.
+- **[`AGENTS.md`](AGENTS.md)** is for an assistant working *on* this repository: the layout, which files are generated and must not be edited by hand, the commands, and the rules the tests enforce. `CLAUDE.md` imports it.
+
+
 ## Data on top
 
 Draw your layers between the basemap and its labels, so place names stay readable:
@@ -134,13 +142,6 @@ CJK labels are drawn by the browser from local fonts, as MapLibre does by defaul
 - Large areas carry their contrast on an edge of at least 3:1.
 - Overlay colours reach 3:1 on the land, and their order keeps neighbours apart for protanopic and deuteranopic readers.
 - `test/style.test.ts` measures all of it, including that the label glyphs contain every letter of "Łódź", "Nam Định" and "Калининград".
-
-## AI assistants
-
-Two files tell an AI assistant how to work with the style:
-
-- **[`llms.txt`](llms.txt)** is for an assistant building a map *with* the style: install, the options, how to draw data on top, the colour order and the attribution it must keep. It ships in the package and with the demo.
-- **[`AGENTS.md`](AGENTS.md)** is for an assistant working *on* this repository: the layout, which files are generated and must not be edited by hand, the commands, and the rules the tests enforce. `CLAUDE.md` imports it.
 
 ## Known issues
 
