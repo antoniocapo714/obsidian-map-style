@@ -118,8 +118,6 @@ body {
 /* ---- README banner (?view=banner) ---- */
 .banner-frame {
   position: relative;
-  width: 1280px;
-  height: 640px;
   overflow: hidden;
   background: var(--color-background-body);
 }
@@ -136,17 +134,17 @@ body {
   background: linear-gradient(
     90deg,
     var(--color-background-body) 0%,
-    var(--color-background-body) 30%,
-    rgba(8, 9, 10, 0.86) 40%,
-    rgba(8, 9, 10, 0) 58%
+    var(--color-background-body) 36%,
+    rgba(8, 9, 10, 0.86) 46%,
+    rgba(8, 9, 10, 0) 64%
   );
 }
 .banner-copy {
   position: absolute;
-  left: 72px;
+  left: var(--spacing-10);
   top: 0;
   bottom: 0;
-  width: 400px;
+  width: 300px;
   display: grid;
   align-content: center;
   gap: var(--spacing-5);
@@ -171,5 +169,5 @@ body {
   border-top-left-radius: var(--radius-inner);
   background: rgba(8, 9, 10, 0.85);
   color: var(--color-text-secondary);
-  font: var(--font-weight-normal) var(--font-size-xs) var(--font-family-body);
+  font: var(--font-weight-normal) var(--font-size-sm) var(--font-family-body);
 }

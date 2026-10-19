@@ -247,14 +247,21 @@ function Demo() {
 /**
  * The README banner, as a poster: the map full-bleed and untouched, the data on
  * it in colour, and the name on a dark band that fades into the map from the
- * left. No cards — the map is the subject. Rendered at `?view=banner` (add
- * `&city=milan` to try another extract) into a fixed 1280×640 frame, captured
- * at 2× and saved as docs/banner.jpg.
+ * left. No cards — the map is the subject.
+ *
+ * Drawn at the size GitHub shows it — an 880×440 frame, captured at 3× — so
+ * every word renders at its real type size. Drawn at 1280 and scaled down to
+ * the README's width, the tagline fell to 9px and the legend to 7px.
+ * Rendered at `?view=banner` (add `&city=madrid` to try another extract).
  */
+const FRAME = {width: 880, height: 440};
+/** Layout below is authored on a 1280-wide grid and scaled to the frame. */
+const K = FRAME.width / 1280;
 const BANNER_VIEW: Record<City, {center: [number, number]; zoom: number}> = {
-  madrid: {center: [-3.6905, 40.4225], zoom: 13.2},
-  milan: {center: [9.1905, 45.4655], zoom: 13.4},
-  'mexico-city': {center: [-99.1332, 19.4326], zoom: 12.9},
+  // Zooms are for the 1280 grid; log2(K) brings the same area into the frame.
+  madrid: {center: [-3.6905, 40.4225], zoom: 13.2 + Math.log2(K)},
+  milan: {center: [9.1905, 45.4655], zoom: 13.4 + Math.log2(K)},
+  'mexico-city': {center: [-99.1332, 19.4326], zoom: 12.9 + Math.log2(K)},
 };
 
 /**
@@ -264,7 +271,7 @@ const BANNER_VIEW: Record<City, {center: [number, number]; zoom: number}> = {
  * and clear of the band.
  */
 function bannerData(m: maplibregl.Map) {
-  const at = ([x, y]: [number, number]) => m.unproject([x, y]).toArray();
+  const at = ([x, y]: [number, number]) => m.unproject([x * K, y * K]).toArray();
   const area: [number, number][] = [[905, 70], [1120, 48], [1196, 214], [1062, 286], [930, 232], [905, 70]];
   const route: [number, number][] = [[560, 612], [640, 520], [742, 468], [858, 452], [962, 392], [1074, 360], [1180, 404], [1300, 382]];
   const points: [number, number][] = [[642, 520], [858, 452], [1074, 360], [1180, 404], [690, 214], [780, 330], [1000, 150], [1092, 236], [1180, 560], [930, 560], [600, 300]];
@@ -292,7 +299,7 @@ function ReadmeBanner() {
       attributionControl: false,
     });
     // The band covers the left 40%; centre the city in what is left.
-    m.setPadding({left: 520, top: 0, right: 0, bottom: 0});
+    m.setPadding({left: 520 * K, top: 0, right: 0, bottom: 0});
     m.jumpTo({center: view.center, zoom: view.zoom});
     m.on('styleimagemissing', (e) => {
       if (!m.hasImage(e.id)) m.addImage(e.id, {width: 1, height: 1, data: new Uint8Array(4)});
@@ -310,7 +317,7 @@ function ReadmeBanner() {
     return () => m.remove();
   }, []);
   return (
-    <div className="banner-frame">
+    <div className="banner-frame" style={FRAME}>
       <div ref={container} className="banner-map" />
       <div className="banner-band" />
       <div className="banner-copy">
@@ -319,23 +326,21 @@ function ReadmeBanner() {
           <br />
           map style
         </Heading>
-        <Text color="secondary">
-          A dark MapLibre basemap that stays quiet,
-          <br />
-          so the colour on the map is your data.
+        <Text type="large" weight="normal" color="secondary">
+          A dark MapLibre basemap that stays quiet, so the colour on the map is your data.
         </Text>
         <ul className="banner-legend">
           <li>
             <span className="demo-key demo-key-point" style={{background: OVERLAY.blue}} />
-            <Text type="supporting">Points</Text>
+            <Text>Points</Text>
           </li>
           <li>
             <span className="demo-key demo-key-line" style={{background: OVERLAY.orange}} />
-            <Text type="supporting">Routes</Text>
+            <Text>Routes</Text>
           </li>
           <li>
             <span className="demo-key demo-key-area" style={{borderColor: OVERLAY.purple, background: `${OVERLAY.purple}52`}} />
-            <Text type="supporting">Areas</Text>
+            <Text>Areas</Text>
           </li>
         </ul>
       </div>
