@@ -27,7 +27,7 @@ bun run glyphs   # rebuild Obsidian Sans (needs Python 3 + fonttools in .tools/p
 
 ## Rules
 
-- **Colour is reserved for data.** Basemap colours stay near-neutral (saturation under 0.28); overlay colours stay saturated (0.42 or more) and reach 3:1 on the land. The tests enforce both.
+- **Colour is reserved for data.** Basemap greys are as neutral as the theme's (OKLCH chroma 0.012 or less, water 0.02); overlay colours carry at least 0.1 and reach 3:1 on the land. Sprites stay greyscale. The tests enforce all of it.
 - **Large areas get a subtle fill and a 3:1 edge** — airports, industrial land, water, buildings. Never make an area fill the brightest thing on screen.
 - **Opacity is part of the colour.** Fold any alpha into the hex; a layer that ships at 0.5 opacity is a different colour from the one measured.
 - **Zoom expressions go at the top level.** Put `case` inside interpolation stops, never around them — the reverse fails style validation silently and the map never loads.
@@ -35,3 +35,12 @@ bun run glyphs   # rebuild Obsidian Sans (needs Python 3 + fonttools in .tools/p
 - **Fix a failing contrast or coverage test by fixing the style**, never by relaxing the threshold.
 - **No product or personal names, and no other brands**, in code, comments, docs or demo content. Documentation in English, short and plain.
 - Map data is OpenStreetMap (ODbL): keep the attribution on every rendered map, including images.
+
+## Releasing
+
+1. Bump `version` in `package.json` and add a `## x.y.z` section to `CHANGELOG.md`. Run `bun run build` and commit `dist/`.
+2. Update the pinned tag in the install lines of `README.md` and `llms.txt` (`#vx.y.z`).
+3. Commit, push, and wait for CI to pass on `main`.
+4. Publish the release on that commit, with its CHANGELOG section as the notes:
+   `gh release create vx.y.z --target <commit> --title vx.y.z --notes-file <notes>`.
+5. Never move or delete a published tag. A fix is a new patch version.

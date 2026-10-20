@@ -58,8 +58,10 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/cr
 ## Getting started
 
 ```bash
-npm install github:creative-context/obsidian-map-style maplibre-gl pmtiles
+npm install github:creative-context/obsidian-map-style#v0.3.1 maplibre-gl pmtiles
 ```
+
+`#v0.3.1` pins a [release](https://github.com/creative-context/obsidian-map-style/releases); without it you get the tip of `main`.
 
 Serve the package's `assets/` folder (label glyphs and sprites) from your app, for example by copying `node_modules/obsidian-map-style/assets` into your public directory. Then:
 
