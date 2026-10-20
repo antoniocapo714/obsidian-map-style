@@ -10,13 +10,13 @@
 </p>
 
 <p align="center">
-  <b>Version 0.3</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 5</a>
+  <b>Version 0.3</b> · Built on <a href="https://github.com/protomaps/basemaps">Protomaps basemaps 5</a> and <a href="https://maplibre.org">MapLibre GL 6</a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.3.0-2D72D2?labelColor=1A1D21" alt="Version 0.3.0">
   <img src="https://img.shields.io/badge/license-MIT-238551?labelColor=1A1D21" alt="MIT licence">
-  <img src="https://img.shields.io/badge/maplibre-5-8A8F98?labelColor=1A1D21" alt="MapLibre 5">
+  <img src="https://img.shields.io/badge/maplibre-6-8A8F98?labelColor=1A1D21" alt="MapLibre 6">
   <img src="https://img.shields.io/badge/no_API_key-self--hosted-6FA6E8?labelColor=1A1D21" alt="No API key, self-hosted">
 </p>
 
@@ -64,11 +64,13 @@ npm install github:creative-context/obsidian-map-style maplibre-gl pmtiles
 Serve the package's `assets/` folder (label glyphs and sprites) from your app, for example by copying `node_modules/obsidian-map-style/assets` into your public directory. Then:
 
 ```ts
-import maplibregl from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import {Protocol} from 'pmtiles';
 import {obsidianMapStyle} from 'obsidian-map-style';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+maplibregl.setWorkerUrl(workerUrl);
 maplibregl.addProtocol('pmtiles', new Protocol().tile);
 
 const map = new maplibregl.Map({
@@ -83,13 +85,15 @@ const map = new maplibregl.Map({
 });
 ```
 
+Use MapLibre GL 6.4.1 or later; earlier versions, 5.x included, have a published XSS advisory ([GHSA-jrc7-96c5-q579](https://github.com/advisories/GHSA-jrc7-96c5-q579)). MapLibre 6 has no default export, and it loads its worker from a separate file that a bundler does not find on its own: `?url` (Vite) emits the worker and `setWorkerUrl` points MapLibre at it. The style itself works with MapLibre 5 and 6.
+
 ### Options
 
 | Option | Default | What it does |
 |---|---|---|
 | `tiles` | — | The detailed tiles: a PMTiles archive or a TileJSON URL, Protomaps v4 schema. |
 | `worldTiles` | none | A low-zoom planet archive drawn underneath. Lines and labels hand off to `tiles` at zoom 7, so nothing is drawn twice. |
-| `assets` | — | Where `fonts/` and `sprites/` are served. Resolved to an absolute URL, which MapLibre 5 requires for sprites. |
+| `assets` | — | Where `fonts/` and `sprites/` are served. Resolved to an absolute URL, which MapLibre requires for sprites since version 5. |
 | `lang` | `en` | Label language. |
 | `hideRailways` | `false` | Hide the basemap's railways, for apps that draw their own. |
 

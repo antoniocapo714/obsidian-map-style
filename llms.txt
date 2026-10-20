@@ -5,6 +5,7 @@
 ## Install and use
 
 - `npm install github:creative-context/obsidian-map-style maplibre-gl pmtiles`
+- MapLibre GL 6.4.1 or later. Import it as a namespace (`import * as maplibregl from 'maplibre-gl'`: version 6 has no default export) and, in a bundled app, point it at its worker: `import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'` then `maplibregl.setWorkerUrl(workerUrl)`.
 - Register PMTiles once: `maplibregl.addProtocol('pmtiles', new Protocol().tile)` (from `pmtiles`).
 - Serve the package's `assets/` folder (glyphs and sprites) from your app.
 - `new maplibregl.Map({style: obsidianMapStyle({tiles: 'https://host/area.pmtiles', worldTiles: 'https://host/world.pmtiles', assets: '/basemap'}), ...})`

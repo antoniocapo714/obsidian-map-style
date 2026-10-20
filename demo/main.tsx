@@ -1,6 +1,11 @@
 import {StrictMode, useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import maplibregl, {type GeoJSONSourceSpecification} from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import type {GeoJSONSourceSpecification} from 'maplibre-gl';
+// MapLibre 6 loads its worker from a separate module, found relative to its
+// own file — which no longer exists once a bundler has inlined it. `?url`
+// makes Vite emit the worker and hand back where it put it.
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import {Protocol} from 'pmtiles';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@astryxdesign/core/reset.css';
@@ -22,6 +27,7 @@ import {OVERLAY, areaLayers, firstLabelLayer, lineLayers, obsidianMapStyle, poin
  * sample data drawn with the overlay recipes. The panel is built with Astryx
  * and the Obsidian theme, which is what the style was designed beside.
  */
+maplibregl.setWorkerUrl(workerUrl);
 maplibregl.addProtocol('pmtiles', new Protocol().tile);
 
 const BASE = import.meta.env.BASE_URL;
@@ -91,6 +97,14 @@ function styleFor(city: City) {
   });
 }
 
+/**
+ * Supplies a transparent 1px image for any icon the sprite lacks. MapLibre 6
+ * resolves missing images through this hook; `styleimagemissing` only notifies.
+ */
+const placeholder = (m: maplibregl.Map) => (id: string) => {
+  if (!m.hasImage(id)) m.addImage(id, {width: 1, height: 1, data: new Uint8Array(4)});
+};
+
 function addOverlays(map: maplibregl.Map, city: City, visible: Record<Overlay, boolean>) {
   const data = sampleData(CITIES[city].center);
   const before = firstLabelLayer(map.getStyle());
@@ -132,9 +146,7 @@ function Demo() {
     m.once('load', syncZoom); // a shared link can open at any zoom
     // Protomaps' style names a few icons its own sprite sheet lacks (`townhall`).
     // A transparent placeholder keeps the console clean; the label still draws.
-    m.on('styleimagemissing', (e) => {
-      if (!m.hasImage(e.id)) m.addImage(e.id, {width: 1, height: 1, data: new Uint8Array(4)});
-    });
+    m.setMissingStyleImageResolver(placeholder(m));
     m.once('style.load', () => addOverlays(m, startCity, {points: true, route: true, district: true}));
     map.current = m;
     return () => m.remove();
@@ -304,9 +316,7 @@ function ReadmeBanner() {
     // The panel covers the left 40%; centre the city in what is left.
     m.setPadding({left: 520 * K, top: 0, right: 0, bottom: 0});
     m.jumpTo({center: view.center, zoom: view.zoom});
-    m.on('styleimagemissing', (e) => {
-      if (!m.hasImage(e.id)) m.addImage(e.id, {width: 1, height: 1, data: new Uint8Array(4)});
-    });
+    m.setMissingStyleImageResolver(placeholder(m));
     m.once('style.load', () => {
       const data = bannerData(m);
       const before = firstLabelLayer(m.getStyle());

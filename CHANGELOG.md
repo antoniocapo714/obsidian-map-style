@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1
+
+- The demo and tests run on MapLibre GL 6.15. MapLibre 5.x and 6.0–6.4.0 have a published XSS advisory (GHSA-jrc7-96c5-q579); the README now asks for 6.4.1 or later and shows the version 6 setup: a namespace import and `setWorkerUrl` for bundled apps. The style is unchanged and still works with MapLibre 5.
+- The demo supplies missing sprite icons through `setMissingStyleImageResolver`; in MapLibre 6 the `styleimagemissing` event only notifies.
+
 ## 0.3.0
 
 The basemap is readable first and spends no colour. 0.2.0 dimmed the roads below the first data colour, which took motorways to 4.0:1. The roads keep their floors now, and the data is separated from them by hue, halo and size instead.
