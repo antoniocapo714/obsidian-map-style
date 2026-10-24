@@ -1,6 +1,6 @@
 {
   "name": "obsidian-map-style",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "description": "A dark basemap style for MapLibre GL on Protomaps tiles, designed to sit behind data.",
   "license": "MIT",
@@ -49,7 +49,7 @@
     "@protomaps/basemaps": "^5.7.2"
   },
   "peerDependencies": {
-    "maplibre-gl": ">=5.0.0"
+    "maplibre-gl": ">=6.4.1"
   },
   "devDependencies": {
     "@astryxdesign/core": "0.7.1",

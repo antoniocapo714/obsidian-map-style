@@ -27,7 +27,7 @@
         "vitest": "^4.1.10",
       },
       "peerDependencies": {
-        "maplibre-gl": ">=5.0.0",
+        "maplibre-gl": ">=6.4.1",
       },
     },
   },

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- The `maplibre-gl` peer dependency is now `>=6.4.1`. Versions before 6.4.1, 5.x included, carry a published XSS advisory (GHSA-jrc7-96c5-q579); the package manager now warns instead of the style quietly accepting them. The style itself is unchanged.
+
 ## 0.3.1
 
 - The demo and tests run on MapLibre GL 6.15. MapLibre 5.x and 6.0–6.4.0 have a published XSS advisory (GHSA-jrc7-96c5-q579); the README now asks for 6.4.1 or later and shows the version 6 setup: a namespace import and `setWorkerUrl` for bundled apps. The style is unchanged and still works with MapLibre 5.

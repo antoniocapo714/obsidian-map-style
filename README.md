@@ -58,10 +58,10 @@ It is the map companion to the [Obsidian theme for Astryx](https://github.com/cr
 ## Getting started
 
 ```bash
-npm install github:creative-context/obsidian-map-style#v0.3.1 maplibre-gl pmtiles
+npm install github:creative-context/obsidian-map-style#v0.3.2 maplibre-gl pmtiles
 ```
 
-`#v0.3.1` pins a [release](https://github.com/creative-context/obsidian-map-style/releases); without it you get the tip of `main`.
+`#v0.3.2` pins a [release](https://github.com/creative-context/obsidian-map-style/releases); without it you get the tip of `main`.
 
 Serve the package's `assets/` folder (label glyphs and sprites) from your app, for example by copying `node_modules/obsidian-map-style/assets` into your public directory. Then:
 
@@ -87,7 +87,7 @@ const map = new maplibregl.Map({
 });
 ```
 
-Use MapLibre GL 6.4.1 or later; earlier versions, 5.x included, have a published XSS advisory ([GHSA-jrc7-96c5-q579](https://github.com/advisories/GHSA-jrc7-96c5-q579)). MapLibre 6 has no default export, and it loads its worker from a separate file that a bundler does not find on its own: `?url` (Vite) emits the worker and `setWorkerUrl` points MapLibre at it. The style itself works with MapLibre 5 and 6.
+The package needs MapLibre GL 6.4.1 or later: earlier versions, 5.x included, have a published XSS advisory ([GHSA-jrc7-96c5-q579](https://github.com/advisories/GHSA-jrc7-96c5-q579)), and the peer dependency now says so. MapLibre 6 has no default export, and it loads its worker from a separate file that a bundler does not find on its own: `?url` (Vite) emits the worker and `setWorkerUrl` points MapLibre at it.
 
 ### Options
 
